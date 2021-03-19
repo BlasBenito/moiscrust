@@ -2,7 +2,6 @@ The MOISCRUST dataset:
 a spatio-temporal continuous soil moisture dataset  
 from a Mediterranean semiarid dryland  
 from 2006 to 2020  
-  
 REPRODUCIBLE WORKFLOW
 ================
 Joaquín Moreno<sup>1,2</sup>, Sergio Asensio<sup>2</sup>, Miguel

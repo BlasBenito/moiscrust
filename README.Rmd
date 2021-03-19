@@ -4,7 +4,6 @@ title: |
   | a spatio-temporal continuous soil moisture dataset 
   | from a Mediterranean semiarid dryland 
   | from 2006 to 2020
-  |
   | REPRODUCIBLE WORKFLOW
 output:
   github_document:
