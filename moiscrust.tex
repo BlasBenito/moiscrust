@@ -144,7 +144,7 @@ SUPPLEMENTARY MATERIAL}
 \maketitle
 
 {
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{1}
 \tableofcontents
 }
 \textsuperscript{1} Corresponding author, e-mail:
@@ -159,14 +159,40 @@ Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland.\\
 Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
 Alicante, Spain.
 
+\newpage
+
 \hypertarget{summary}{%
 \section{Summary}\label{summary}}
 
 XXX
 
-\hypertarget{installing-and-loading-the-required-libraries}{%
-\section{Installing and loading the required
-libraries}\label{installing-and-loading-the-required-libraries}}
+\hypertarget{reproducing-this-workflow}{%
+\section{Reproducing this workflow}\label{reproducing-this-workflow}}
+
+This reproducible workflow is available as an interactive Rstudio
+notebook in the file \texttt{moiscrust.Rmd} stored in this repository.
+It is packaged with \href{https://cran.r-project.org/package=renv}{renv}
+to facilitate reproducibility. To run it in your computer, execute the
+code chunk below in your R session once you have \texttt{moiscrust.Rmd}
+opened in Rstudio. You will need to replace \texttt{r}eval =
+FALSE\texttt{with}r \texttt{eval\ =\ FALSE} in the header of the code
+chunk.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{install.packages}\NormalTok{(}\StringTok{"renv"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(renv)}
+\NormalTok{renv}\OperatorTok{::}\KeywordTok{restore}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data-loading-and-preparation}{%
+\section{Data loading and
+preparation}\label{data-loading-and-preparation}}
+
+\hypertarget{loading-the-required-libraries}{%
+\subsection{Loading the required
+libraries}\label{loading-the-required-libraries}}
 
 The following libraries are required to run this workflow. These are
 already installed in the local \texttt{renv} folder, so there is no need
@@ -200,10 +226,6 @@ to install them if you don't have them in your computer.
 \NormalTok{knitr}\OperatorTok{::}\NormalTok{knit_hooks}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{document =} \ControlFlowTok{function}\NormalTok{(x) \{}\KeywordTok{sub}\NormalTok{(}\StringTok{'}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{usepackage\{xcolor\}'}\NormalTok{, }\StringTok{'}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{usepackage\{xcolor\}'}\NormalTok{, x, }\DataTypeTok{fixed =} \OtherTok{TRUE}\NormalTok{)\})}
 \end{Highlighting}
 \end{Shaded}
-
-\hypertarget{data-loading-and-preparation}{%
-\section{Data loading and
-preparation}\label{data-loading-and-preparation}}
 
 \hypertarget{loading-the-data}{%
 \subsection{Loading the data}\label{loading-the-data}}
@@ -347,13 +369,7 @@ times}\label{formatting-dates-and-times}}
 \StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"MOISCRUST database (raw data)"}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{fill =} \KeywordTok{expression}\NormalTok{(}\StringTok{"Volumetric water content (cm³ water / cm³ soil)"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.key.width =} \KeywordTok{unit}\NormalTok{(}\DecValTok{1}\NormalTok{, }\StringTok{"cm"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-6-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{ggsave}\NormalTok{(}\DataTypeTok{width =} \DecValTok{12}\NormalTok{, }\DataTypeTok{height =} \DecValTok{17}\NormalTok{, }\DataTypeTok{filename =} \StringTok{"MOISCRUST_raw.pdf"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -398,50 +414,14 @@ time-series}\label{number-of-na-per-time-series}}
 \NormalTok{  )] }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{arrange}\NormalTok{(na_count) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{as.data.frame}\NormalTok{()}
-
-\CommentTok{#showing the table}
-\NormalTok{kableExtra}\OperatorTok{::}\KeywordTok{kbl}\NormalTok{(moiscrust_NA)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{tabular}[t]{l|l|r|r}
-\hline
-sensor & sensor\_group & na\_count & na\_count\_percent\\
-\hline
-bs\_ch5094 & biocrust\_high & 7674 & 16.5\\
-\hline
-stipa5094 & stipa & 10553 & 22.7\\
-\hline
-bs\_cl5094 & biocrust\_low & 10987 & 23.6\\
-\hline
-bs\_cl5063 & biocrust\_low & 11114 & 23.9\\
-\hline
-bs\_cl5062 & biocrust\_low & 11188 & 24.1\\
-\hline
-bs\_ch5062 & biocrust\_high & 11776 & 25.3\\
-\hline
-bs\_ch5063 & biocrust\_high & 14125 & 30.4\\
-\hline
-stipa5062 & stipa & 15363 & 33.0\\
-\hline
-stipa5063 & stipa & 15604 & 33.5\\
-\hline
-bs\_cm5094 & biocrust\_medium & 16934 & 36.4\\
-\hline
-bs\_cm5062 & biocrust\_medium & 18743 & 40.3\\
-\hline
-retama5063 & retama & 20505 & 44.1\\
-\hline
-retama5094 & retama & 22840 & 49.1\\
-\hline
-retama5062 & retama & 22999 & 49.4\\
-\hline
-bs\_cm5063 & biocrust\_medium & 31225 & 67.1\\
-\hline
-\end{tabular}
+\hypertarget{imputation-of-missing-data}{%
+\section{Imputation of missing data}\label{imputation-of-missing-data}}
 
 \hypertarget{developing-criteria-to-find-candidates-for-gap-filling}{%
-\section{Developing criteria to find candidates for gap
+\subsection{Developing criteria to find candidates for gap
 filling}\label{developing-criteria-to-find-candidates-for-gap-filling}}
 
 \begin{Shaded}
@@ -561,8 +541,9 @@ filling}\label{developing-criteria-to-find-candidates-for-gap-filling}}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{imputation-of-missing-data}{%
-\section{Imputation of missing data}\label{imputation-of-missing-data}}
+\hypertarget{generating-the-x-and-y-matrices-to-predict-imputed-values}{%
+\subsection{Generating the x and y matrices to predict imputed
+values}\label{generating-the-x-and-y-matrices-to-predict-imputed-values}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -624,40 +605,6 @@ selected.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{tabular}[t]{l|l|l|l|l|r|r|r|r}
-\hline
-y & x & sensor\_group\_y & sensor\_group\_x & same\_sensor\_group & valid\_cases\_shared\_percent & sensors\_r\_squared & model\_id & selection\_score\\
-\hline
-stipa5063 & bs\_cl5094 & stipa & biocrust\_low & FALSE & 47.42330 & 0.7826120 & 61 & 125.6845\\
-\hline
-stipa5063 & bs\_cl5062 & stipa & biocrust\_low & FALSE & 52.09941 & 0.6922529 & 62 & 121.3247\\
-\hline
-stipa5063 & bs\_cl5063 & stipa & biocrust\_low & FALSE & 66.13635 & 0.8021262 & 63 & 146.3490\\
-\hline
-stipa5063 & bs\_cm5094 & stipa & biocrust\_medium & FALSE & 41.85712 & 0.8607496 & 64 & 127.9321\\
-\hline
-stipa5063 & bs\_cm5062 & stipa & biocrust\_medium & FALSE & 42.63754 & 0.7499577 & 65 & 117.6333\\
-\hline
-stipa5063 & bs\_cm5063 & stipa & biocrust\_medium & FALSE & 26.90646 & 0.8956584 & 66 & 116.4723\\
-\hline
-stipa5063 & bs\_ch5094 & stipa & biocrust\_high & FALSE & 52.89274 & 0.7012173 & 67 & 123.0145\\
-\hline
-stipa5063 & bs\_ch5062 & stipa & biocrust\_high & FALSE & 51.91452 & 0.7804496 & 68 & 129.9595\\
-\hline
-stipa5063 & bs\_ch5063 & stipa & biocrust\_high & FALSE & 59.66504 & 0.7433338 & 69 & 133.9984\\
-\hline
-stipa5063 & retama5094 & stipa & retama & FALSE & 27.98572 & 0.8494829 & 110 & 112.9340\\
-\hline
-stipa5063 & retama5062 & stipa & retama & FALSE & 31.63632 & 0.8561540 & 123 & 117.2517\\
-\hline
-stipa5063 & retama5063 & stipa & retama & FALSE & 45.96779 & 0.8168872 & 135 & 127.6565\\
-\hline
-stipa5063 & stipa5094 & stipa & stipa & TRUE & 48.28543 & 0.5162195 & 146 & 199.9074\\
-\hline
-stipa5063 & stipa5062 & stipa & stipa & TRUE & 48.22953 & 0.5211191 & 156 & 200.3414\\
-\hline
-\end{tabular}
-
 \textbf{3.} The first row of the dataset \texttt{x} is selected.
 
 \begin{Shaded}
@@ -665,14 +612,6 @@ stipa5063 & stipa5062 & stipa & stipa & TRUE & 48.22953 & 0.5211191 & 156 & 200.
 \NormalTok{x_row <-}\StringTok{ }\NormalTok{x[}\DecValTok{1}\NormalTok{, ]}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{tabular}[t]{r|r|r|r|r|r|r|r|r|r|r|r|r|r|r}
-\hline
-retama5094 & retama5062 & retama5063 & stipa5094 & stipa5062 & stipa5063 & bs\_cl5094 & bs\_cl5062 & bs\_cl5063 & bs\_cm5094 & bs\_cm5062 & bs\_cm5063 & bs\_ch5094 & bs\_ch5062 & bs\_ch5063\\
-\hline
-0.197 & NA & NA & 0.132 & NA & NA & 0.232 & NA & NA & 0.205 & NA & NA & 0.121 & NA & NA\\
-\hline
-\end{tabular}
 
 \textbf{3.1.} If there is a recorded value of soil moisture for the
 sensor ``stipa5063'', goes to the next row, until there is a row with
@@ -692,14 +631,6 @@ the target sensor.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{tabular}[t]{r|r|r|r|r}
-\hline
-retama5094 & stipa5094 & bs\_cl5094 & bs\_cm5094 & bs\_ch5094\\
-\hline
-0.197 & 0.132 & 0.232 & 0.205 & 0.121\\
-\hline
-\end{tabular}
-
 \textbf{5.} From these predictors, the one with the highest selection
 score is selected from \texttt{sensors\_pair} generated in the step
 \textbf{2.}.
@@ -712,14 +643,6 @@ score is selected from \texttt{sensors\_pair} generated in the step
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{tabular}[t]{l|l|l|l|l|r|r|r|r}
-\hline
-y & x & sensor\_group\_y & sensor\_group\_x & same\_sensor\_group & valid\_cases\_shared\_percent & sensors\_r\_squared & model\_id & selection\_score\\
-\hline
-stipa5063 & stipa5094 & stipa & stipa & TRUE & 48.28543 & 0.5162195 & 146 & 199.9074\\
-\hline
-\end{tabular}
 
 \textbf{6.} The model to use, stored in the list
 \texttt{sensors\_pairs\_models}, is selected from the value
@@ -737,11 +660,6 @@ empty cell.
 \NormalTok{  )}\OperatorTok{$}\NormalTok{fit}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-##         fit       lwr       upr
-## 1 0.1435911 0.1419916 0.1451907
-\end{verbatim}
 
 \textbf{7.} These values and others available in
 \texttt{best\_predictor} are transferred to the same row in the matrix
@@ -921,59 +839,8 @@ To data frame and joining with moiscrust\_long
 The interpolation has removed all gaps where there was a value to
 interpolate from.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{kableExtra}\OperatorTok{::}\KeywordTok{kbl}\NormalTok{(}
-\NormalTok{  moiscrust_NA, }
-  \DataTypeTok{col.names =} \KeywordTok{c}\NormalTok{(}
-    \StringTok{"Sensor"}\NormalTok{,}
-    \StringTok{"NA before interpolation"}\NormalTok{,}
-    \StringTok{"NA after interpolation"}\NormalTok{,}
-    \StringTok{"NA % before interpolation"}\NormalTok{,}
-    \StringTok{"NA % after interpolation"}
-\NormalTok{    )}
-\NormalTok{  )}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{tabular}[t]{l|r|r|r|r}
-\hline
-Sensor & NA before interpolation & NA after interpolation & NA \% before interpolation & NA \% after interpolation\\
-\hline
-bs\_ch5062 & 11776 & 989 & 25.3 & 2.1\\
-\hline
-bs\_ch5063 & 14125 & 989 & 30.4 & 2.1\\
-\hline
-bs\_ch5094 & 7674 & 989 & 16.5 & 2.1\\
-\hline
-bs\_cl5062 & 11188 & 989 & 24.1 & 2.1\\
-\hline
-bs\_cl5063 & 11114 & 989 & 23.9 & 2.1\\
-\hline
-bs\_cl5094 & 10987 & 989 & 23.6 & 2.1\\
-\hline
-bs\_cm5062 & 18743 & 989 & 40.3 & 2.1\\
-\hline
-bs\_cm5063 & 31225 & 989 & 67.1 & 2.1\\
-\hline
-bs\_cm5094 & 16934 & 989 & 36.4 & 2.1\\
-\hline
-retama5062 & 22999 & 989 & 49.4 & 2.1\\
-\hline
-retama5063 & 20505 & 989 & 44.1 & 2.1\\
-\hline
-retama5094 & 22840 & 989 & 49.1 & 2.1\\
-\hline
-stipa5062 & 15363 & 989 & 33.0 & 2.1\\
-\hline
-stipa5063 & 15604 & 989 & 33.5 & 2.1\\
-\hline
-stipa5094 & 10553 & 989 & 22.7 & 2.1\\
-\hline
-\end{tabular}
-
 \hypertarget{visualizing-the-interpolated-time-series}{%
-\section{Visualizing the interpolated time
+\subsection{Visualizing the interpolated time
 series}\label{visualizing-the-interpolated-time-series}}
 
 Quality of the interpolation
@@ -1015,13 +882,7 @@ Quality of the interpolation
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}
     \DataTypeTok{fill =} \KeywordTok{expression}\NormalTok{(}\StringTok{"Data quality"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.key.width =} \KeywordTok{unit}\NormalTok{(}\DecValTok{1}\NormalTok{, }\StringTok{"cm"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-23-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{ggsave}\NormalTok{(}
   \DataTypeTok{width =} \DecValTok{12}\NormalTok{, }
   \DataTypeTok{height =} \DecValTok{17}\NormalTok{, }
@@ -1061,40 +922,16 @@ may have lower quality.
 \StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"MOISCRUST database (observed and interpolated records)"}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{fill =} \KeywordTok{expression}\NormalTok{(}\StringTok{"Volumetric water content (cm³ water / cm³ soil)"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.key.width =} \KeywordTok{unit}\NormalTok{(}\FloatTok{0.8}\NormalTok{, }\StringTok{"cm"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-24-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{ggsave}\NormalTok{(}\DataTypeTok{width =} \DecValTok{12}\NormalTok{, }\DataTypeTok{height =} \DecValTok{17}\NormalTok{, }\DataTypeTok{filename =} \StringTok{"MOISCRUST_interpolated.pdf"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{data-base-formatting}{%
-\section{Data base formatting}\label{data-base-formatting}}
+\hypertarget{data-base-format}{%
+\section{Data base format}\label{data-base-format}}
 
 The dataset \texttt{moiscrust\_long} is the database in long format
 already.
-
-\begin{tabular}[t]{l|r|l|l|r|r|r|r|r|r|l|r|l|r|r|r|l|l|r|r|r|l|l}
-\hline
-date\_time & date\_time\_id & date & time & year & year\_day & month & month\_day & week & week\_day & sensor & soil\_moisture & interpolated & model\_estimate & model\_ci\_lower & model\_ci\_upper & model\_predictor & same\_sensor\_group & sensors\_r\_squared & valid\_cases\_shared\_percent & selection\_score & sensor\_group & interpolation\_quality\\
-\hline
-2006-11-17 18:00:00 & 1 & 2006-11-17 & 18:00 & 2006 & 321 & 11 & 17 & 46 & 6 & retama5094 & 0.1970000 & FALSE & NA & NA & NA & NA & NA & NA & NA & NA & NA & observation\\
-\hline
-2006-11-17 18:00:00 & 1 & 2006-11-17 & 18:00 & 2006 & 321 & 11 & 17 & 46 & 6 & retama5062 & 0.2442059 & TRUE & 0.2442059 & 0.2422496 & 0.2461622 & retama5094 & TRUE & 0.8825786 & 20.50395 & 208.7618 & retama & acceptable\\
-\hline
-2006-11-17 18:00:00 & 1 & 2006-11-17 & 18:00 & 2006 & 321 & 11 & 17 & 46 & 6 & retama5063 & 0.2375965 & TRUE & 0.2375965 & 0.2361139 & 0.2390791 & retama5094 & TRUE & 0.9065618 & 28.73605 & 219.3922 & retama & acceptable\\
-\hline
-2006-11-17 18:00:00 & 1 & 2006-11-17 & 18:00 & 2006 & 321 & 11 & 17 & 46 & 6 & stipa5094 & 0.1320000 & FALSE & NA & NA & NA & NA & NA & NA & NA & NA & NA & observation\\
-\hline
-2006-11-17 18:00:00 & 1 & 2006-11-17 & 18:00 & 2006 & 321 & 11 & 17 & 46 & 6 & stipa5062 & 0.1167035 & TRUE & 0.1167035 & 0.1153987 & 0.1180083 & stipa5094 & TRUE & 0.5676305 & 53.85591 & 210.6190 & stipa & poor\\
-\hline
-2006-11-17 18:00:00 & 1 & 2006-11-17 & 18:00 & 2006 & 321 & 11 & 17 & 46 & 6 & stipa5063 & 0.1435911 & TRUE & 0.1435911 & 0.1419916 & 0.1451907 & stipa5094 & TRUE & 0.5162195 & 48.28543 & 199.9074 & stipa & poor\\
-\hline
-\end{tabular}
 
 Its columns are:
 
@@ -1165,7 +1002,7 @@ Its columns are:
 \end{itemize}
 
 \hypertarget{saving-the-data-base-in-different-formats}{%
-\section{Saving the data base in different
+\subsection{Saving the data base in different
 formats}\label{saving-the-data-base-in-different-formats}}
 
 To expand its usability as much as possible, we provide the data in four
@@ -1211,5 +1048,9 @@ different formats: .RData, .csv, .xlsx, and SQLite.
 \NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
+
+Code and workflow design by \textbf{Blas M. Benito}
+(\href{mailto:blasbenito@gmail.com}{\nolinkurl{blasbenito@gmail.com}}
+and @blasbenito)
 
 \end{document}
