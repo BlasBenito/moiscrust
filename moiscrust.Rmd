@@ -1,15 +1,80 @@
 ---
-title: 'MOISCRUST: database preparation'
+title: |
+  | The MOISCRUST dataset:
+  | a spatio-temporal continuous soil moisture dataset 
+  | from a Mediterranean semiarid dryland 
+  | from 2006 to 2020
+  | SUPPLEMENTARY MATERIALS
+institute:
+  - corresponding: "Corresponding author, e-mail: joaquin.moreno@ua.es"
+  - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
+  - crowther: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
+  - ecology: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
+author:
+  - Joaquín Moreno:
+       institute: [corresponding, margalef]
+  - Sergio Asensio:
+      institute: [margalef]
+  - Miguel Berdugo:
+      institute: [margalef, crowther]
+  - Beatriz Gozalo:
+      institute: [margalef]
+  - Victoria Ochoa:
+      institute: [margalef] 
+  - Blas M. Benito:
+      institute: [margalef]
+  - Fernando T. Maestre:
+      institute: [margalef, ecology] 
 output:
-  html_document:
-    toc: true
+  pdf_document:
+    fig_caption: yes
+    fig_width: 9
+    highlight: tango
+    includes:
+      in_header: header.tex
+    keep_tex: yes
+    latex_engine: lualatex
+    number_sections: yes
+    toc: yes
     toc_depth: 2
+    df_print: kable
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+  html_document:
+    theme: cerulean
+    fig_caption: yes
+    highlight: tango
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+code_folding: show
+citation_package: natbib
 ---
 
-# PAPER TITLE
-## Authors
+# data frame test
 
-# Reproduce workflow
+A bit of text **to see** 
+
+how *it looks*.
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+x <- as.data.frame(matrix(NA, 10, 10))
+kableExtra::kbl(x, booktabs = TRUE) %>% 
+  kable_styling(
+    position = "center", 
+    latex_options = c("HOLD_position", "striped", "repeat_header"), 
+    bootstrap_options = c("striped", "hover")
+    )
+```
+
+
+# Reproducing this workflow
 
 This workflow is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run this interactive notebook in your machine, please, execute first the code chunk below. You will need to replace `eval = FALSE` with `eval = TRUE` in the header of the code chunk.
 
@@ -19,10 +84,9 @@ library(renv)
 renv::restore()
 ```
 
-
 # Installing and loading the required libraries
 
-```{r}
+```{r, eval = FALSE}
 #automatic install of packages if they are not readily available
 required_packages <- c(
   "data.table",
@@ -34,10 +98,11 @@ required_packages <- c(
   "readr",
   "writexl",
   "RSQLite",
-  "zip",
-  "renv"
+  "zip"
 )
-packages_to_install <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
+packages_to_install <- required_packages[
+  !(required_packages %in% installed.packages()[,"Package"])
+  ]
 
 #installing missing packages
 if(length(packages_to_install) > 0){
@@ -57,15 +122,16 @@ rm(
   required_packages
 )
 
-#chunk options
+#knitr options
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)})
 ```
 
 # Data loading and preparation
 
 ## Loading the data
 
-```{r}
+```{r, eval = FALSE}
 #load, clean names, and rename time columns
 moiscrust <- data.table::fread(file = "moiscrust_raw.csv") %>% 
   janitor::clean_names() %>% 
@@ -76,10 +142,9 @@ moiscrust <- data.table::fread(file = "moiscrust_raw.csv") %>%
   as.data.frame()
 ```
 
-
 ## Formatting dates and times
 
-```{r}
+```{r, eval = FALSE}
 #date to Year-month-day
 moiscrust$date <- format(
   as.POSIXct(
@@ -125,10 +190,9 @@ moiscrust$week <- lubridate::week(moiscrust$date)
 moiscrust$week_day <- lubridate::wday(moiscrust$date)
 ```
 
-
 ## Reordering columns
 
-```{r}
+```{r, eval = FALSE}
 #names of the sensors
 sensors <- c(
   "retama5094",
@@ -166,7 +230,7 @@ moiscrust <- moiscrust[, c(
 
 ## To long format
 
-```{r}
+```{r, eval = FALSE}
 #to long format
 moiscrust_long <- tidyr::pivot_longer(
   moiscrust,
@@ -178,7 +242,7 @@ moiscrust_long <- tidyr::pivot_longer(
 
 ## Data visualization
 
-```{r, fig.width=12, fig.height=17}
+```{r, fig.width=12, fig.height=17, eval = FALSE}
 ggplot(moiscrust_long) + 
   facet_wrap("year", scales = "free_x", ncol = 2) +
   aes(x = year_day, y = sensor, fill = soil_moisture) + 
@@ -198,7 +262,7 @@ ggsave(width = 12, height = 17, filename = "MOISCRUST_raw.pdf")
 
 ## Number of NA per time-series
 
-```{r}
+```{r, eval = FALSE}
 #counting NA values per sensor
 moiscrust_NA <- moiscrust_long %>% 
   group_by(sensor) %>% 
@@ -240,8 +304,7 @@ kableExtra::kbl(moiscrust_NA)
 
 # Developing criteria to find candidates for gap filling
 
-
-```{r}
+```{r, eval = FALSE}
 #combining sensors in pairs x-y
 sensors_pairs <- combn(
   x = sensors,
@@ -311,7 +374,8 @@ for(i in 1:nrow(sensors_pairs)){
   sensor_pair_i <- sensor_pair_i[complete.cases(sensor_pair_i), ]
    
   #common cases
-  sensors_pairs[i, "valid_cases_shared_percent"] <- nrow(sensor_pair_i) / nrow(moiscrust) * 100
+  sensors_pairs[i, "valid_cases_shared_percent"] <- 
+    nrow(sensor_pair_i) / nrow(moiscrust) * 100
   
   #R squared of the sensor pair
   sensors_pairs[i, "sensors_r_squared"] <- cor(
@@ -355,12 +419,11 @@ rm(
 invisible(gc())
 ```
 
-
 # Gap filling
 
 To fill the gaps we go row by row, and for each cell, we find the model that better fits the criteria
 
-```{r}
+```{r, eval = FALSE}
 #creating data frame of predictors
 x <- moiscrust[, sensors]
 
@@ -399,35 +462,36 @@ The steps to fill the gaps in the MOISCRUST database go as follows:
 
 **1.** A given sensor name is selected: "stipa5063"
 
-```{r}
+```{r, eval = FALSE}
 sensor = "stipa5063"
 ```
 
 **2.** The sensors pairs from the table `sensors_pairs` where the selected sensor is `y` (the response variable) are selected.
 
-```{r}
+```{r, eval = FALSE}
 sensors_pair <- sensors_pairs %>% 
     dplyr::filter(y == sensor)
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 kableExtra::kbl(sensors_pair)
 ```
 
 **3.** The first row of the dataset `x` is selected.
 
-```{r}
+```{r, eval = FALSE}
 x_row <- x[1, ]
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 kableExtra::kbl(x[1, ])
 ```
-  **3.1.** If there is a recorded value of soil moisture for the sensor "stipa5063", goes to the next row, until there is a row with `NA`.
-  
+
+**3.1.** If there is a recorded value of soil moisture for the sensor "stipa5063", goes to the next row, until there is a row with `NA`.
+
 **4.** If there is an empty value, the potential candidate predictors are selected from the row by removing sensors with NA, and the target sensor.
 
-```{r}
+```{r, eval = FALSE}
 predictor_candidates <- as.vector(x[1, ])
 predictor_candidates <- predictor_candidates[which(
       !is.na(predictor_candidates) & 
@@ -435,25 +499,26 @@ predictor_candidates <- predictor_candidates[which(
       )]
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 kableExtra::kbl(predictor_candidates)
 ```
 
 **5.** From these predictors, the one with the highest selection score is selected from `sensors_pair` generated in the step **2.**.
 
-```{r}
+```{r, eval = FALSE}
 best_predictor <- sensors_pair %>% 
   dplyr::filter(x %in% names(predictor_candidates)) %>%
   dplyr::arrange(desc(selection_score)) %>% 
   dplyr::slice(1)
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 kableExtra::kbl(best_predictor)
 ```
+
 **6.** The model to use, stored in the list `sensors_pairs_models`, is selected from the value `best_predictor$model_id`, and used to predict a value for the empty cell.
 
-```{r}
+```{r, eval = FALSE}
 predict(
   object = sensors_pairs_models[[best_predictor$model_id]],
   newdata = x_row,
@@ -471,7 +536,7 @@ predict(
 
 The code applies the algorithm explained above to every sensor and row. Sensors are processed in parallel to speed up the gap-filling operation.
 
-```{r}
+```{r, eval = FALSE}
 #setup for parallel execution
 if(.Platform$OS.type == "windows"){
   temp_cluster <- parallel::makeCluster(
@@ -564,7 +629,7 @@ rm(
 
 To data frame and joining with moiscrust_long
 
-```{r}
+```{r, eval = FALSE}
 #naming the output
 names(moiscrust_interpolation) <- sensors
 
@@ -597,7 +662,9 @@ moiscrust_long$interpolation_quality <- ifelse(
 )
 
 #filling NA with "observation"
-moiscrust_long[is.na(moiscrust_long$interpolation_quality), "interpolation_quality"] <- "observation"
+moiscrust_long[
+  is.na(moiscrust_long$interpolation_quality), "interpolation_quality"
+  ] <- "observation"
 
 #adding NA where there are no values
 moiscrust_long[is.na(moiscrust_long$soil_moisture), "interpolation_quality"] <- NA
@@ -625,7 +692,7 @@ rm(moiscrust_interpolation)
 
 The interpolation has removed all gaps where there was a value to interpolate from.
 
-```{r}
+```{r, eval = FALSE}
 kableExtra::kbl(
   moiscrust_NA, 
   col.names = c(
@@ -637,11 +704,12 @@ kableExtra::kbl(
     )
   )
 ```
+
 # Visualizing the interpolated time series
 
 Quality of the interpolation
 
-```{r, fig.width=12, fig.height=17}
+```{r, fig.width=12, fig.height=17, eval = FALSE}
 ggplot(moiscrust_long) + 
   facet_wrap(
     "year", 
@@ -684,9 +752,10 @@ ggsave(
   filename = "MOISCRUST_interpolated_quality.pdf"
   )
 ```
+
 The r squared between the predicted sensor values and the predictor are shown with transparency. Interpolated records with higher transparency may have lower quality.
 
-```{r, fig.width=12, fig.height=17}
+```{r, fig.width=12, fig.height=17, eval = FALSE}
 ggplot(moiscrust_long) + 
   facet_wrap(
     "year", 
@@ -720,38 +789,39 @@ ggsave(width = 12, height = 17, filename = "MOISCRUST_interpolated.pdf")
 
 The dataset `moiscrust_long` is the database in long format already.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 kableExtra::kbl(head(moiscrust_long))
 ```
+
 Its columns are:
 
-  + `date_time`: date and time in POSIX format.
-  + `date_time_id`: integer, unique ID for each value of `date_time`.
-  + `date`: date in format year-month-day.
-  + `time`: time in format hour-minute.
-  + `year`: integer, year.
-  + `year_day`: integer, day of the year.
-  + `month`: integer, month number.
-  + `week`: integer, week of the year.
-  + `week_day`: integer, day of the week.
-  + `sensor`: character, sensor name.
-  + `soil_moisture`: numeric, soil moisture value in $m^{3} water /m^{3} soil$.
-  + `interpolated`: boolean, `TRUE` for interpolated records and `FALSE` for observations.
-  + `model_estimate`: numeric, prediction of the linear model.
-  + `model_ci_lower`: numeric, lower bound of the confidence interval of the estimate.
-  + `model_ci_upper`: numeric, upper bound of the confidence interval of the estimate.
-  + `model_predictor`: character, name of the sensor used as predictor in the linear model.
-  + `same_sensor_group`: boolean, `TRUE` if the sensor and its predictor are in the same group ("stipa", "retama", "biocrust_low", "biocrust_medium", "biocrust_high").
-  + `sensors_r_squared`: numeric, R squared between `sensor` and `model_predictor`.
-  + `valid_cases_shared_percent`: numeric, percentage of shared valid cases between `sensor` and `model_predictor`, taking the total number of values in `date_time_id` as reference.
-  + `selection_score`: numeric, value used to select the `model_predictor`, based on the sum of `same_sensor_group` (100 if `TRUE` and 0 if `FALSE`), `sensors_r_squared` multiplied by 100, and `valid_cases_shared_percent`.
-  + `interpolation_quality`: character, with the values "observation" for observations, "acceptable" for interpolated values where `sensors_r_squared` is higher than 0.85 and `valid_cases_shared_percent` is higher than 20, and "poor" for interpolated values below at least one of these thresholds.
-  
+-   `date_time`: date and time in POSIX format.
+-   `date_time_id`: integer, unique ID for each value of `date_time`.
+-   `date`: date in format year-month-day.
+-   `time`: time in format hour-minute.
+-   `year`: integer, year.
+-   `year_day`: integer, day of the year.
+-   `month`: integer, month number.
+-   `week`: integer, week of the year.
+-   `week_day`: integer, day of the week.
+-   `sensor`: character, sensor name.
+-   `soil_moisture`: numeric, soil moisture value in $m^{3} water /m^{3} soil$.
+-   `interpolated`: boolean, `TRUE` for interpolated records and `FALSE` for observations.
+-   `model_estimate`: numeric, prediction of the linear model.
+-   `model_ci_lower`: numeric, lower bound of the confidence interval of the estimate.
+-   `model_ci_upper`: numeric, upper bound of the confidence interval of the estimate.
+-   `model_predictor`: character, name of the sensor used as predictor in the linear model.
+-   `same_sensor_group`: boolean, `TRUE` if the sensor and its predictor are in the same group ("stipa", "retama", "biocrust_low", "biocrust_medium", "biocrust_high").
+-   `sensors_r_squared`: numeric, R squared between `sensor` and `model_predictor`.
+-   `valid_cases_shared_percent`: numeric, percentage of shared valid cases between `sensor` and `model_predictor`, taking the total number of values in `date_time_id` as reference.
+-   `selection_score`: numeric, value used to select the `model_predictor`, based on the sum of `same_sensor_group` (100 if `TRUE` and 0 if `FALSE`), `sensors_r_squared` multiplied by 100, and `valid_cases_shared_percent`.
+-   `interpolation_quality`: character, with the values "observation" for observations, "acceptable" for interpolated values where `sensors_r_squared` is higher than 0.85 and `valid_cases_shared_percent` is higher than 20, and "poor" for interpolated values below at least one of these thresholds.
+
 # Saving the data base in different formats
 
 To expand its usability as much as possible, we provide the data in four different formats: .RData, .csv, .xlsx, and SQLite.
 
-```{r}
+```{r, eval = FALSE}
 #create directory for the database
 dir.create("database")
 
@@ -789,4 +859,3 @@ zip(
   files = "database"
   )
 ```
-
