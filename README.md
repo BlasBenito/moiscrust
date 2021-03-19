@@ -2,7 +2,8 @@ The MOISCRUST dataset:
 a spatio-temporal continuous soil moisture dataset  
 from a Mediterranean semiarid dryland  
 from 2006 to 2020  
-README
+  
+REPRODUCIBLE WORKFLOW
 ================
 Joaquín Moreno<sup>1,2</sup>, Sergio Asensio<sup>2</sup>, Miguel
 Berdugo<sup>2,3</sup>, Beatriz Gozalo<sup>2</sup>, Victoria
@@ -20,26 +21,19 @@ Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland.
 Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
 Alicante, Spain.
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you
-execute code within the notebook, the results appear beneath the code.
+# Reproducible workflow
 
-Try executing this chunk by clicking the *Run* button within the chunk
-or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+This reproducible workflow is available as an interactive Rstudio
+notebook in the file `moiscrust.Rmd` stored in this repository. It is
+packaged with [renv](https://cran.r-project.org/package=renv) to
+facilitate reproducibility. To run it in your computer, please, execute
+first the code chunk below. You will need to replace `eval = FALSE` with
+`eval = TRUE` in the header of the code chunk.
 
 ``` r
-plot(cars)
+install.packages("renv")
+library(renv)
+renv::restore()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or
-by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output
-will be saved alongside it (click the *Preview* button or press
-*Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the
-editor. Consequently, unlike *Knit*, *Preview* does not run any R code
-chunks. Instead, the output of the chunk when it was last run in the
-editor is displayed.
+Code and workflow design by **Blas M. Benito** (<blasbenito@gmail.com>)

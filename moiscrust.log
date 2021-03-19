@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.10.0 (TeX Live 2019/Debian)  (format=lualatex 2021.3.19)  19 MAR 2021 12:51
+This is LuaTeX, Version 1.10.0 (TeX Live 2019/Debian)  (format=lualatex 2021.3.19)  19 MAR 2021 13:18
  restricted system commands enabled.
 **moiscrust.tex
 (./moiscrust.tex
@@ -795,30 +795,30 @@ Package caption Info: listings package is loaded.
 ) (./moiscrust.aux)
 \openout1 = moiscrust.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 142.
-LaTeX Font Info:    ... okay on input line 142.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 143.
+LaTeX Font Info:    ... okay on input line 143.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 142.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 143.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/b/n on input line 142.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/b/n on input line 143.
 
 Package fontspec Info: latinmodern-math scale = 1.365831035080949.
 
@@ -853,7 +853,7 @@ tex_copy_fontdimens:
 (fontspec)             \__um_luatex_copy_fontdimens: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 13.6583pt on input line 142.
+(Font)              scaled to size 13.6583pt on input line 143.
 
 Package fontspec Info: latinmodern-math scale = 1.365831035080949.
 
@@ -899,17 +899,17 @@ ath.otf]:mode=base;script=math;language=dflt;+tlig;+ssty=0;"<-6>s*[1.36583103508
 (fontspec)             \__um_luatex_copy_fontdimens: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 13.6583pt on input line 142.
+(Font)              scaled to size 13.6583pt on input line 143.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 142.
+(Font)              `operators' in the math version `normal' on input line 143.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input 
-line 142.
+line 143.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 142.
+(Font)              `operators' in the math version `bold' on input line 143.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on input
- line 142.
+ line 143.
 
 Package fontspec Info: latinmodern-math scale = 1.365831035080949.
 
@@ -1001,15 +1001,15 @@ ath.otf]:mode=base;script=math;language=dflt;+tlig;+ssty=0;"<-6>s*[1.36596761818
 (fontspec)             \fontdimen 21\font =0pt\relax 
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 142.
+(Font)              `symbols' in the math version `normal' on input line 143.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on input
- line 142.
+ line 143.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 142.
+(Font)              `symbols' in the math version `bold' on input line 143.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on input
- line 142.
+ line 143.
 
 Package fontspec Info: latinmodern-math scale = 1.365831035080949.
 
@@ -1084,55 +1084,55 @@ ath.otf]:mode=base;script=math;language=dflt;+tlig;+ssty=0;"<-6>s*[1.36569445197
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 14
-2.
+3.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on input
- line 142.
+ line 143.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 142.
+(Font)              `largesymbols' in the math version `bold' on input line 143.
 
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on input
- line 142.
+ line 143.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 9.5608pt on input line 142.
+(Font)              scaled to size 9.5608pt on input line 143.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 6.82915pt on input line 142.
+(Font)              scaled to size 6.82915pt on input line 143.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 14
-2.
+3.
 (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 13.65967pt on input line 142.
+(Font)              scaled to size 13.65967pt on input line 143.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 9.56177pt on input line 142.
+(Font)              scaled to size 9.56177pt on input line 143.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 6.82983pt on input line 142.
+(Font)              scaled to size 6.82983pt on input line 143.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 13.65692pt on input line 142.
+(Font)              scaled to size 13.65692pt on input line 143.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.55984pt on input line 142.
+(Font)              scaled to size 9.55984pt on input line 143.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.82846pt on input line 142.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 142.
+(Font)              scaled to size 6.82846pt on input line 143.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 143.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 142.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 143.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Info: Redefining \microtypecontext on input line 142.
+LaTeX Info: Redefining \microtypecontext on input line 143.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 142.
+LaTeX Info: Redefining \showhyphens on input line 143.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of spacing.
 Package microtype Info: No adjustment of kerning.
@@ -1141,7 +1141,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 \AtBeginShipoutBox=\box55
-Package hyperref Info: Link coloring OFF on input line 142.
+Package hyperref Info: Link coloring OFF on input line 143.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1151,9 +1151,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count303
 )
-LaTeX Info: Redefining \ref on input line 142.
-LaTeX Info: Redefining \pageref on input line 142.
-LaTeX Info: Redefining \nameref on input line 142.
+LaTeX Info: Redefining \ref on input line 143.
+LaTeX Info: Redefining \pageref on input line 143.
+LaTeX Info: Redefining \nameref on input line 143.
 (./moiscrust.out) (./moiscrust.out)
 \@outlinefile=\write4
 
@@ -1217,38 +1217,38 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/n' will be
-(Font)              scaled to size 19.0081pt on input line 144.
+(Font)              scaled to size 19.0081pt on input line 145.
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/n' will be
-(Font)              scaled to size 13.20007pt on input line 144.
+(Font)              scaled to size 13.20007pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 16.38995pt on input line 144.
+(Font)              scaled to size 16.38995pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.92664pt on input line 144.
+(Font)              scaled to size 10.92664pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 8.19498pt on input line 144.
+(Font)              scaled to size 8.19498pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 16.3916pt on input line 144.
+(Font)              scaled to size 16.3916pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.92773pt on input line 144.
+(Font)              scaled to size 10.92773pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 8.1958pt on input line 144.
+(Font)              scaled to size 8.1958pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 16.3883pt on input line 144.
+(Font)              scaled to size 16.3883pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.92554pt on input line 144.
+(Font)              scaled to size 10.92554pt on input line 145.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 8.19415pt on input line 144.
+(Font)              scaled to size 8.19415pt on input line 145.
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/n' will be
-(Font)              scaled to size 8.80005pt on input line 144.
+(Font)              scaled to size 8.80005pt on input line 145.
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/n' will be
-(Font)              scaled to size 15.84007pt on input line 147.
+(Font)              scaled to size 15.84007pt on input line 148.
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/b/n' will be
-(Font)              scaled to size 15.84007pt on input line 147.
+(Font)              scaled to size 15.84007pt on input line 148.
 (./moiscrust.toc
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/b/n' will be
 (Font)              scaled to size 11.00006pt on input line 1.
@@ -1260,440 +1260,499 @@ LaTeX Font Info:    Font shape `TU/OpenSans(0)/b/n' will be
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/n' will be
-(Font)              scaled to size 7.70004pt on input line 149.
-LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/it' will be
-(Font)              scaled to size 11.00006pt on input line 166.
-
-Package xcolor Warning: Incompatible color definition on input line 168.
-
+(Font)              scaled to size 7.70004pt on input line 150.
 LaTeX Font Info:    Font shape `TU/OpenSans(2)/m/n' will be
-(Font)              scaled to size 8.99994pt on input line 169.
+(Font)              scaled to size 8.99994pt on input line 172.
+
+Package xcolor Warning: Incompatible color definition on input line 175.
+
+LaTeX Font Info:    Font shape `TU/OpenSans(2)/m/it' will be
+(Font)              scaled to size 8.99994pt on input line 177.
 LaTeX Font Info:    Font shape `TU/OpenSans(2)/b/n' will be
-(Font)              scaled to size 8.99994pt on input line 170.
+(Font)              scaled to size 8.99994pt on input line 178.
 
-Package xcolor Warning: Incompatible color definition on input line 180.
+Package xcolor Warning: Incompatible color definition on input line 202.
 
 
-Package xcolor Warning: Incompatible color definition on input line 180.
+Package xcolor Warning: Incompatible color definition on input line 202.
+
+
+Package xcolor Warning: Incompatible color definition on input line 202.
 
 [2]
 
-Package xcolor Warning: Incompatible color definition on input line 213.
+Package xcolor Warning: Incompatible color definition on input line 202.
 
 
-Package xcolor Warning: Incompatible color definition on input line 219.
+Package xcolor Warning: Incompatible color definition on input line 202.
+
+LaTeX Font Info:    Font shape `TU/OpenSans(0)/b/n' will be
+(Font)              scaled to size 13.20007pt on input line 209.
+
+Package xcolor Warning: Incompatible color definition on input line 211.
 
 
-Package xcolor Warning: Incompatible color definition on input line 219.
+Package xcolor Warning: Incompatible color definition on input line 222.
 
 
-Package xcolor Warning: Incompatible color definition on input line 225.
-
-LaTeX Font Info:    Font shape `TU/OpenSans(2)/m/it' will be
-(Font)              scaled to size 8.99994pt on input line 227.
-
-Package xcolor Warning: Incompatible color definition on input line 266.
+Package xcolor Warning: Incompatible color definition on input line 222.
 
 
-Package xcolor Warning: Incompatible color definition on input line 266.
+Package xcolor Warning: Incompatible color definition on input line 228.
 
 
-Package xcolor Warning: Incompatible color definition on input line 266.
+Package xcolor Warning: Incompatible color definition on input line 274.
+
+
+Package xcolor Warning: Incompatible color definition on input line 274.
+
+
+Package xcolor Warning: Incompatible color definition on input line 274.
 
 [3]
 
-Package xcolor Warning: Incompatible color definition on input line 266.
+Package xcolor Warning: Incompatible color definition on input line 274.
 
 
-Package xcolor Warning: Incompatible color definition on input line 266.
-
-LaTeX Font Info:    Font shape `TU/OpenSans(0)/b/n' will be
-(Font)              scaled to size 13.20007pt on input line 273.
-
-Package xcolor Warning: Incompatible color definition on input line 275.
+Package xcolor Warning: Incompatible color definition on input line 274.
 
 
-Package xcolor Warning: Incompatible color definition on input line 286.
+Package xcolor Warning: Incompatible color definition on input line 279.
 
 
-Package xcolor Warning: Incompatible color definition on input line 286.
+Package xcolor Warning: Incompatible color definition on input line 315.
 
 
-Package xcolor Warning: Incompatible color definition on input line 292.
+Package xcolor Warning: Incompatible color definition on input line 315.
 
 
-Package xcolor Warning: Incompatible color definition on input line 338.
-
-
-Package xcolor Warning: Incompatible color definition on input line 338.
-
-
-Package xcolor Warning: Incompatible color definition on input line 338.
+Package xcolor Warning: Incompatible color definition on input line 315.
 
 [4]
 
-Package xcolor Warning: Incompatible color definition on input line 338.
+Package xcolor Warning: Incompatible color definition on input line 315.
 
 
-Package xcolor Warning: Incompatible color definition on input line 338.
+Package xcolor Warning: Incompatible color definition on input line 315.
 
 
-Package xcolor Warning: Incompatible color definition on input line 343.
+Package xcolor Warning: Incompatible color definition on input line 320.
 
 
-Package xcolor Warning: Incompatible color definition on input line 379.
+Package xcolor Warning: Incompatible color definition on input line 330.
 
 
-Package xcolor Warning: Incompatible color definition on input line 379.
+Package xcolor Warning: Incompatible color definition on input line 330.
 
 
-Package xcolor Warning: Incompatible color definition on input line 379.
+Package xcolor Warning: Incompatible color definition on input line 335.
+
+
+Package xcolor Warning: Incompatible color definition on input line 351.
+
+
+Package xcolor Warning: Incompatible color definition on input line 351.
+
+
+Package xcolor Warning: Incompatible color definition on input line 351.
 
 [5]
 
-Package xcolor Warning: Incompatible color definition on input line 379.
+Package xcolor Warning: Incompatible color definition on input line 351.
 
 
-Package xcolor Warning: Incompatible color definition on input line 379.
+Package xcolor Warning: Incompatible color definition on input line 351.
+
+<moiscrust_files/figure-latex/unnamed-chunk-6-1.pdf, id=120, 843.15pt x 1211.526
+25pt>
+File: moiscrust_files/figure-latex/unnamed-chunk-6-1.pdf Graphic file (type pdf)
+
+<use moiscrust_files/figure-latex/unnamed-chunk-6-1.pdf>
+Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-6-1.pdf  use
+d on input line 353.
+(luatex.def)             Requested size: 452.6568pt x 650.42473pt.
+
+Package xcolor Warning: Incompatible color definition on input line 355.
+
+[6] [7<./moiscrust_files/figure-latex/unnamed-chunk-6-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 359.
 
 
-Package xcolor Warning: Incompatible color definition on input line 384.
+Package xcolor Warning: Incompatible color definition on input line 359.
 
 
-Package xcolor Warning: Incompatible color definition on input line 394.
+Package xcolor Warning: Incompatible color definition on input line 365.
 
 
-Package xcolor Warning: Incompatible color definition on input line 394.
+Package xcolor Warning: Incompatible color definition on input line 405.
 
 
-Package xcolor Warning: Incompatible color definition on input line 399.
-
-
-Package xcolor Warning: Incompatible color definition on input line 417.
-
-
-Package xcolor Warning: Incompatible color definition on input line 417.
-
-
-Package xcolor Warning: Incompatible color definition on input line 417.
-
-[6]
-
-Package xcolor Warning: Incompatible color definition on input line 417.
-
-
-Package xcolor Warning: Incompatible color definition on input line 417.
-
-
-Package xcolor Warning: Incompatible color definition on input line 423.
-
-
-Package xcolor Warning: Incompatible color definition on input line 463.
-
-
-Package xcolor Warning: Incompatible color definition on input line 463.
-
-
-Package xcolor Warning: Incompatible color definition on input line 463.
-
-[7]
-
-Package xcolor Warning: Incompatible color definition on input line 463.
-
-
-Package xcolor Warning: Incompatible color definition on input line 463.
-
-
-Package xcolor Warning: Incompatible color definition on input line 469.
-
-
-Package xcolor Warning: Incompatible color definition on input line 584.
-
-
-Package xcolor Warning: Incompatible color definition on input line 584.
-
-
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 405.
 
 [8]
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 447.
 
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Underfull \vbox (badness 10000) detected at line 584
- []
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Underfull \vbox (badness 10000) detected at line 584
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 [9]
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Underfull \vbox (badness 10000) detected at line 584
+Underfull \vbox (badness 10000) detected at line 562
  []
 
 
-Underfull \vbox (badness 10000) detected at line 584
+Underfull \vbox (badness 10000) detected at line 562
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 [10]
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Package xcolor Warning: Incompatible color definition on input line 592.
+Underfull \vbox (badness 10000) detected at line 562
+ []
 
 
-Package xcolor Warning: Incompatible color definition on input line 625.
+Underfull \vbox (badness 10000) detected at line 562
+ []
 
 
-Package xcolor Warning: Incompatible color definition on input line 625.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 [11]
 
-Package xcolor Warning: Incompatible color definition on input line 634.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Package xcolor Warning: Incompatible color definition on input line 638.
+Package xcolor Warning: Incompatible color definition on input line 562.
 
 
-Package xcolor Warning: Incompatible color definition on input line 638.
+Package xcolor Warning: Incompatible color definition on input line 567.
 
 
-Package xcolor Warning: Incompatible color definition on input line 644.
+Package xcolor Warning: Incompatible color definition on input line 600.
 
 
-Package xcolor Warning: Incompatible color definition on input line 649.
+Package xcolor Warning: Incompatible color definition on input line 600.
 
 
-Package xcolor Warning: Incompatible color definition on input line 649.
+Package xcolor Warning: Incompatible color definition on input line 600.
+
+[12]
+
+Package xcolor Warning: Incompatible color definition on input line 600.
 
 
-Package xcolor Warning: Incompatible color definition on input line 653.
+Package xcolor Warning: Incompatible color definition on input line 600.
 
 
-Package xcolor Warning: Incompatible color definition on input line 657.
+Package xcolor Warning: Incompatible color definition on input line 610.
 
 
-Package xcolor Warning: Incompatible color definition on input line 657.
+Package xcolor Warning: Incompatible color definition on input line 614.
+
+
+Package xcolor Warning: Incompatible color definition on input line 614.
+
+
+Package xcolor Warning: Incompatible color definition on input line 620.
+
+
+Package xcolor Warning: Incompatible color definition on input line 625.
+
+
+Package xcolor Warning: Incompatible color definition on input line 625.
+
+
+Overfull \hbox (390.14711pt too wide) in paragraph at lines 627--660
+[][] 
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 663.
 
 
 Package xcolor Warning: Incompatible color definition on input line 667.
 
 
-Package xcolor Warning: Incompatible color definition on input line 675.
+Package xcolor Warning: Incompatible color definition on input line 667.
 
 
-Package xcolor Warning: Incompatible color definition on input line 675.
+Overfull \hbox (537.27196pt too wide) in paragraph at lines 669--676
+[][] 
+ []
 
 
-Package xcolor Warning: Incompatible color definition on input line 681.
-
-
-Package xcolor Warning: Incompatible color definition on input line 688.
-
-
-Package xcolor Warning: Incompatible color definition on input line 688.
-
-
-Package xcolor Warning: Incompatible color definition on input line 695.
-
-
-Package xcolor Warning: Incompatible color definition on input line 705.
-
-
-Package xcolor Warning: Incompatible color definition on input line 705.
-
-[12]
-
-Package xcolor Warning: Incompatible color definition on input line 724.
-
-
-Package xcolor Warning: Incompatible color definition on input line 815.
-
-
-Package xcolor Warning: Incompatible color definition on input line 815.
-
-
-Package xcolor Warning: Incompatible color definition on input line 815.
+Package xcolor Warning: Incompatible color definition on input line 685.
 
 [13]
 
-Package xcolor Warning: Incompatible color definition on input line 815.
+Package xcolor Warning: Incompatible color definition on input line 693.
 
 
-Package xcolor Warning: Incompatible color definition on input line 815.
+Package xcolor Warning: Incompatible color definition on input line 693.
 
 
-Underfull \vbox (badness 10000) detected at line 815
+Package xcolor Warning: Incompatible color definition on input line 707.
+
+
+Package xcolor Warning: Incompatible color definition on input line 714.
+
+
+Package xcolor Warning: Incompatible color definition on input line 714.
+
+
+Overfull \hbox (369.11916pt too wide) in paragraph at lines 716--723
+[][] 
  []
 
 
-Underfull \vbox (badness 10000) detected at line 815
- []
+Package xcolor Warning: Incompatible color definition on input line 729.
 
 
-Package xcolor Warning: Incompatible color definition on input line 815.
+Package xcolor Warning: Incompatible color definition on input line 739.
+
+
+Package xcolor Warning: Incompatible color definition on input line 739.
+
+
+Package xcolor Warning: Incompatible color definition on input line 763.
 
 [14]
 
-Package xcolor Warning: Incompatible color definition on input line 815.
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 
-Package xcolor Warning: Incompatible color definition on input line 815.
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 
-Package xcolor Warning: Incompatible color definition on input line 819.
-
-
-Package xcolor Warning: Incompatible color definition on input line 880.
-
-
-Package xcolor Warning: Incompatible color definition on input line 880.
-
-
-Underfull \vbox (badness 10000) detected at line 880
+Underfull \vbox (badness 10000) detected at line 854
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 880.
+Underfull \vbox (badness 10000) detected at line 854
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 [15]
 
-Package xcolor Warning: Incompatible color definition on input line 880.
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 
-Package xcolor Warning: Incompatible color definition on input line 880.
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 
-Package xcolor Warning: Incompatible color definition on input line 885.
-
-
-Package xcolor Warning: Incompatible color definition on input line 898.
-
-
-Package xcolor Warning: Incompatible color definition on input line 898.
-
-
-Underfull \vbox (badness 10000) detected at line 898
+Underfull \vbox (badness 10000) detected at line 854
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 898.
+Underfull \vbox (badness 10000) detected at line 854
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 [16]
 
-Package xcolor Warning: Incompatible color definition on input line 898.
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 
-Package xcolor Warning: Incompatible color definition on input line 898.
+Package xcolor Warning: Incompatible color definition on input line 854.
 
 
-Package xcolor Warning: Incompatible color definition on input line 906.
+Package xcolor Warning: Incompatible color definition on input line 858.
 
 
-Package xcolor Warning: Incompatible color definition on input line 950.
+Package xcolor Warning: Incompatible color definition on input line 919.
 
 
-Package xcolor Warning: Incompatible color definition on input line 950.
+Package xcolor Warning: Incompatible color definition on input line 919.
 
 
-Package xcolor Warning: Incompatible color definition on input line 950.
+Underfull \vbox (badness 10000) detected at line 919
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 919.
 
 [17]
 
-Package xcolor Warning: Incompatible color definition on input line 950.
+Package xcolor Warning: Incompatible color definition on input line 919.
 
 
-Package xcolor Warning: Incompatible color definition on input line 950.
+Package xcolor Warning: Incompatible color definition on input line 919.
 
 
-Package xcolor Warning: Incompatible color definition on input line 956.
+Package xcolor Warning: Incompatible color definition on input line 924.
 
 
-Package xcolor Warning: Incompatible color definition on input line 986.
+Package xcolor Warning: Incompatible color definition on input line 937.
 
 
-Package xcolor Warning: Incompatible color definition on input line 986.
+Package xcolor Warning: Incompatible color definition on input line 937.
+
+
+Overfull \hbox (144.0875pt too wide) in paragraph at lines 939--974
+[][] 
+ []
 
 [18]
-Underfull \hbox (badness 1264) in paragraph at lines 1055--1060
+
+Package xcolor Warning: Incompatible color definition on input line 981.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1019.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1019.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1019.
+
+[19]
+
+Package xcolor Warning: Incompatible color definition on input line 1019.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1019.
+
+<moiscrust_files/figure-latex/unnamed-chunk-23-1.pdf, id=192, 843.15pt x 1219.55
+624pt>
+File: moiscrust_files/figure-latex/unnamed-chunk-23-1.pdf Graphic file (type pdf
+)
+<use moiscrust_files/figure-latex/unnamed-chunk-23-1.pdf>
+Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-23-1.pdf  us
+ed on input line 1021.
+(luatex.def)             Requested size: 449.69775pt x 650.45569pt.
+
+Package xcolor Warning: Incompatible color definition on input line 1023.
+
+[20] [21<./moiscrust_files/figure-latex/unnamed-chunk-23-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 1031.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1031.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1037.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1065.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1065.
+
+<moiscrust_files/figure-latex/unnamed-chunk-24-1.pdf, id=208, 843.15pt x 1219.55
+624pt>
+File: moiscrust_files/figure-latex/unnamed-chunk-24-1.pdf Graphic file (type pdf
+)
+<use moiscrust_files/figure-latex/unnamed-chunk-24-1.pdf>
+Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-24-1.pdf  us
+ed on input line 1067.
+(luatex.def)             Requested size: 449.69775pt x 650.45569pt.
+
+Package xcolor Warning: Incompatible color definition on input line 1069.
+
+[22] [23<./moiscrust_files/figure-latex/unnamed-chunk-24-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 1073.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1073.
+
+
+Overfull \hbox (1425.5595pt too wide) in paragraph at lines 1081--1098
+[][] 
+ []
+
+
+Underfull \hbox (badness 1264) in paragraph at lines 1160--1165
 []\TU/OpenSans(2)/m/n/10 interpolation_quality\TU/OpenSans(0)/m/n/10 : char-ac-
 ter, with the val-ues ``ob-ser-va-tion'' for ob-ser-va-tions, ``ac-
  []
 
 
-Underfull \hbox (badness 1281) in paragraph at lines 1055--1060
+Underfull \hbox (badness 1281) in paragraph at lines 1160--1165
 \TU/OpenSans(0)/m/n/10 cept-able'' for in-ter-po-lated val-ues where \TU/OpenSa
 ns(2)/m/n/10 sensors_r_squared \TU/OpenSans(0)/m/n/10 is higher than 0.85 and
  []
 
+[24]
 
-Package xcolor Warning: Incompatible color definition on input line 1069.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1108.
+Package xcolor Warning: Incompatible color definition on input line 1174.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1108.
+Package xcolor Warning: Incompatible color definition on input line 1213.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1108.
-
-[19]
-
-Package xcolor Warning: Incompatible color definition on input line 1108.
+Package xcolor Warning: Incompatible color definition on input line 1213.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1108.
+Package xcolor Warning: Incompatible color definition on input line 1213.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1110.
-[20]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1110.
+[25]
+
+Package xcolor Warning: Incompatible color definition on input line 1213.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1213.
+
+
+Package caption Warning: Unused \captionsetup[table] on input line 131.
+See the caption package documentation for explanation.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1215.
+[26]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1215.
 (./moiscrust.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1110.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1110.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1215.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1215.
 Package rerunfilecheck Info: File `moiscrust.out' has not changed.
-(rerunfilecheck)             Checksum: 1C0C670607AC50272B65D0269A0682FC;3341.
+(rerunfilecheck)             Checksum: 6552894C05BBF72994830DDB1C0EAF8F;3246.
 )
 
 Here is how much of LuaTeX's memory you used:
- 22945 strings out of 481365
+ 22970 strings out of 481365
  125171,953878 words of node,token memory allocated
- 509 words of node memory still in use:
-   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 6 attribute, 57 glue_spec,
+ 504 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 6 attribute, 56 glue_spec,
  6 attribute_list, 1 write nodes
-   avail lists: 2:1888,3:143,4:366,5:320,6:42,7:3183,8:23,9:381,10:6,11:113
- 39010 multiletter control sequences out of 65536+600000
- 100 fonts using 25951411 bytes
- 59i,11n,118p,934b,374s stack positions out of 5000i,500n,10000p,200000b,100000s
+   avail lists: 2:2100,3:130,4:328,5:326,6:41,7:4115,8:22,9:620,10:6,11:162
+ 39017 multiletter control sequences out of 65536+600000
+ 99 fonts using 25800827 bytes
+ 59i,11n,118p,934b,407s stack positions out of 5000i,500n,10000p,200000b,100000s
 </usr/share/texmf/fonts/opentype/public/lm-math/latinmodern-math.otf></usr/share
 /texmf/fonts/opentype/public/lm-math/latinmodern-math.otf></usr/share/texlive/te
 xmf-dist/fonts/truetype/ascender/opensans/OpenSans-Italic.ttf></usr/share/texliv
 e/texmf-dist/fonts/truetype/ascender/opensans/OpenSans-Bold.ttf></usr/share/texl
 ive/texmf-dist/fonts/truetype/ascender/opensans/OpenSans-Regular.ttf>
-Output written on moiscrust.pdf (20 pages, 81441 bytes).
+Output written on moiscrust.pdf (26 pages, 4497206 bytes).
 
-PDF statistics: 239 PDF objects out of 1000 (max. 8388607)
- 200 compressed objects within 2 object streams
- 57 named destinations out of 1000 (max. 131072)
- 137 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 279 PDF objects out of 1000 (max. 8388607)
+ 222 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 131072)
+ 129 words of extra memory for PDF output out of 10000 (max. 100000000)
 

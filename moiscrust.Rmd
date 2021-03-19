@@ -4,7 +4,8 @@ title: |
   | a spatio-temporal continuous soil moisture dataset 
   | from a Mediterranean semiarid dryland 
   | from 2006 to 2020
-  | SUPPLEMENTARY MATERIALS
+  | 
+  | SUPPLEMENTARY MATERIAL
 institute:
   - corresponding: "Corresponding author, e-mail: joaquin.moreno@ua.es"
   - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
@@ -55,38 +56,16 @@ code_folding: show
 citation_package: natbib
 ---
 
-# data frame test
+# Summary
 
-A bit of text **to see** 
+XXX
 
-how *it looks*.
-
-```{r}
-library(tidyverse)
-library(kableExtra)
-x <- as.data.frame(matrix(NA, 10, 10))
-kableExtra::kbl(x, booktabs = TRUE) %>% 
-  kable_styling(
-    position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
-    )
-```
-
-
-# Reproducing this workflow
-
-This workflow is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run this interactive notebook in your machine, please, execute first the code chunk below. You will need to replace `eval = FALSE` with `eval = TRUE` in the header of the code chunk.
-
-```{r, eval = FALSE}
-install.packages("renv")
-library(renv)
-renv::restore()
-```
 
 # Installing and loading the required libraries
 
-```{r, eval = FALSE}
+The following libraries are required to run this workflow. These are already installed in the local `renv` folder, so there is no need to install them if you don't have them in your computer.
+
+```{r, eval = TRUE}
 #automatic install of packages if they are not readily available
 required_packages <- c(
   "data.table",
@@ -98,40 +77,26 @@ required_packages <- c(
   "readr",
   "writexl",
   "RSQLite",
-  "zip"
+  "zip",
+  "knitr"
 )
-packages_to_install <- required_packages[
-  !(required_packages %in% installed.packages()[,"Package"])
-  ]
-
-#installing missing packages
-if(length(packages_to_install) > 0){
-  install.packages(
-    packages_to_install, 
-    dep = TRUE,
-    Ncpus = parallel::detectCores() - 1
-    )
-}
 
 #loading packages
 invisible(lapply(required_packages, library, character.only = TRUE))
 
 #removing objects
-rm(
-  packages_to_install,
-  required_packages
-)
+rm(required_packages)
 
 #knitr options
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)})
+knitr::knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)})
 ```
 
 # Data loading and preparation
 
 ## Loading the data
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #load, clean names, and rename time columns
 moiscrust <- data.table::fread(file = "moiscrust_raw.csv") %>% 
   janitor::clean_names() %>% 
@@ -144,7 +109,7 @@ moiscrust <- data.table::fread(file = "moiscrust_raw.csv") %>%
 
 ## Formatting dates and times
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #date to Year-month-day
 moiscrust$date <- format(
   as.POSIXct(
@@ -192,7 +157,7 @@ moiscrust$week_day <- lubridate::wday(moiscrust$date)
 
 ## Reordering columns
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #names of the sensors
 sensors <- c(
   "retama5094",
@@ -230,7 +195,7 @@ moiscrust <- moiscrust[, c(
 
 ## To long format
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #to long format
 moiscrust_long <- tidyr::pivot_longer(
   moiscrust,
@@ -242,7 +207,7 @@ moiscrust_long <- tidyr::pivot_longer(
 
 ## Data visualization
 
-```{r, fig.width=12, fig.height=17, eval = FALSE}
+```{r, fig.width=12, fig.height=17, eval = TRUE}
 ggplot(moiscrust_long) + 
   facet_wrap("year", scales = "free_x", ncol = 2) +
   aes(x = year_day, y = sensor, fill = soil_moisture) + 
@@ -262,7 +227,7 @@ ggsave(width = 12, height = 17, filename = "MOISCRUST_raw.pdf")
 
 ## Number of NA per time-series
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #counting NA values per sensor
 moiscrust_NA <- moiscrust_long %>% 
   group_by(sensor) %>% 
@@ -304,7 +269,7 @@ kableExtra::kbl(moiscrust_NA)
 
 # Developing criteria to find candidates for gap filling
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #combining sensors in pairs x-y
 sensors_pairs <- combn(
   x = sensors,
@@ -419,11 +384,9 @@ rm(
 invisible(gc())
 ```
 
-# Gap filling
+# Imputation of missing data
 
-To fill the gaps we go row by row, and for each cell, we find the model that better fits the criteria
-
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #creating data frame of predictors
 x <- moiscrust[, sensors]
 
@@ -456,34 +419,34 @@ y[, "date_time_id"] <- moiscrust[, "date_time_id"]
 y[, "interpolated"] <- FALSE
 ```
 
-## Gap filling, step by step
+## Data imputation, step by step
 
 The steps to fill the gaps in the MOISCRUST database go as follows:
 
 **1.** A given sensor name is selected: "stipa5063"
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 sensor = "stipa5063"
 ```
 
 **2.** The sensors pairs from the table `sensors_pairs` where the selected sensor is `y` (the response variable) are selected.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 sensors_pair <- sensors_pairs %>% 
     dplyr::filter(y == sensor)
 ```
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE, eval = TRUE}
 kableExtra::kbl(sensors_pair)
 ```
 
 **3.** The first row of the dataset `x` is selected.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 x_row <- x[1, ]
 ```
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE, eval = TRUE}
 kableExtra::kbl(x[1, ])
 ```
 
@@ -491,7 +454,7 @@ kableExtra::kbl(x[1, ])
 
 **4.** If there is an empty value, the potential candidate predictors are selected from the row by removing sensors with NA, and the target sensor.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 predictor_candidates <- as.vector(x[1, ])
 predictor_candidates <- predictor_candidates[which(
       !is.na(predictor_candidates) & 
@@ -499,26 +462,26 @@ predictor_candidates <- predictor_candidates[which(
       )]
 ```
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE, eval = TRUE}
 kableExtra::kbl(predictor_candidates)
 ```
 
 **5.** From these predictors, the one with the highest selection score is selected from `sensors_pair` generated in the step **2.**.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 best_predictor <- sensors_pair %>% 
   dplyr::filter(x %in% names(predictor_candidates)) %>%
   dplyr::arrange(desc(selection_score)) %>% 
   dplyr::slice(1)
 ```
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE, eval = TRUE}
 kableExtra::kbl(best_predictor)
 ```
 
 **6.** The model to use, stored in the list `sensors_pairs_models`, is selected from the value `best_predictor$model_id`, and used to predict a value for the empty cell.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 predict(
   object = sensors_pairs_models[[best_predictor$model_id]],
   newdata = x_row,
@@ -532,11 +495,11 @@ predict(
 
 **8.** Once all the sensors and rows have been processed this way, the matrix `y` is joined with `moiscrust_long`, and its interpolated values are transferred to the `soil_moisture` column, along with other columns indicating the quality of the interpolation.
 
-## Applying gap filling to the whole dataset
+## Applying the algorithm to the complete dataset
 
 The code applies the algorithm explained above to every sensor and row. Sensors are processed in parallel to speed up the gap-filling operation.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #setup for parallel execution
 if(.Platform$OS.type == "windows"){
   temp_cluster <- parallel::makeCluster(
@@ -629,7 +592,7 @@ rm(
 
 To data frame and joining with moiscrust_long
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #naming the output
 names(moiscrust_interpolation) <- sensors
 
@@ -692,7 +655,7 @@ rm(moiscrust_interpolation)
 
 The interpolation has removed all gaps where there was a value to interpolate from.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 kableExtra::kbl(
   moiscrust_NA, 
   col.names = c(
@@ -709,7 +672,7 @@ kableExtra::kbl(
 
 Quality of the interpolation
 
-```{r, fig.width=12, fig.height=17, eval = FALSE}
+```{r, fig.width=12, fig.height=17, eval = TRUE}
 ggplot(moiscrust_long) + 
   facet_wrap(
     "year", 
@@ -755,7 +718,7 @@ ggsave(
 
 The r squared between the predicted sensor values and the predictor are shown with transparency. Interpolated records with higher transparency may have lower quality.
 
-```{r, fig.width=12, fig.height=17, eval = FALSE}
+```{r, fig.width=12, fig.height=17, eval = TRUE}
 ggplot(moiscrust_long) + 
   facet_wrap(
     "year", 
@@ -789,7 +752,7 @@ ggsave(width = 12, height = 17, filename = "MOISCRUST_interpolated.pdf")
 
 The dataset `moiscrust_long` is the database in long format already.
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE, eval = TRUE}
 kableExtra::kbl(head(moiscrust_long))
 ```
 
@@ -821,7 +784,7 @@ Its columns are:
 
 To expand its usability as much as possible, we provide the data in four different formats: .RData, .csv, .xlsx, and SQLite.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 #create directory for the database
 dir.create("database")
 
