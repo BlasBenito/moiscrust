@@ -1,69 +1,45 @@
----
-title: |
-  | The MOISCRUST dataset:
-  | a spatio-temporal continuous soil moisture dataset 
-  | from a Mediterranean semiarid dryland 
-  | from 2006 to 2020
-  | README
-institute:
-  - corresponding: "Corresponding author, e-mail: joaquin.moreno@ua.es"
-  - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
-  - crowther: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
-  - ecology: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
-author:
-  - Joaquín Moreno:
-       institute: [corresponding, margalef]
-  - Sergio Asensio:
-      institute: [margalef]
-  - Miguel Berdugo:
-      institute: [margalef, crowther]
-  - Beatriz Gozalo:
-      institute: [margalef]
-  - Victoria Ochoa:
-      institute: [margalef] 
-  - Blas M. Benito:
-      institute: [margalef]
-  - Fernando T. Maestre:
-      institute: [margalef, ecology] 
-output:
-  pdf_document:
-    fig_caption: yes
-    fig_width: 9
-    highlight: tango
-    includes:
-      in_header: header.tex
-    keep_tex: yes
-    latex_engine: lualatex
-    number_sections: yes
-    toc: yes
-    toc_depth: 2
-    df_print: kable
-    pandoc_args:
-      - '--lua-filter=scholarly-metadata.lua'
-      - '--lua-filter=author-info-blocks.lua'
-  html_document:
-    theme: cerulean
-    fig_caption: yes
-    highlight: tango
-    toc: yes
-    toc_depth: 3
-    number_sections: yes
-    pandoc_args:
-      - '--lua-filter=scholarly-metadata.lua'
-      - '--lua-filter=author-info-blocks.lua'
-code_folding: show
-citation_package: natbib
----
+The MOISCRUST dataset:  
+a spatio-temporal continuous soil moisture dataset  
+from a Mediterranean semiarid dryland  
+from 2006 to 2020  
+README
+================
+Joaquín Moreno<sup>1,2</sup>, Sergio Asensio<sup>2</sup>, Miguel
+Berdugo<sup>2,3</sup>, Beatriz Gozalo<sup>2</sup>, Victoria
+Ochoa<sup>2</sup>, Blas M. Benito<sup>2</sup>, and Fernando T.
+Maestre<sup>2,4</sup>
 
-# SUPPLEMENTARY MATERIALS OF THE PAPER: The MOISCRUST dataset: a spatio-temporal continuous soil moisture dataset from a Mediterranean semiarid dryland from 2006 to 2020
+<sup>1</sup> Corresponding author, e-mail: <joaquin.moreno@ua.es>  
+<sup>2</sup> Instituto Multidisciplinar para el Estudio del Medio “Ramon
+Margalef”, Universidad de Alicante, Edificio Nuevos Institutos,
+Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
+Spain.  
+<sup>3</sup> Institut Department of Environmental Systems Science, ETH
+Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland.  
+<sup>4</sup> Departamento de Ecología, Universidad de Alicante,
+Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
+Alicante, Spain.
 
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you
+execute code within the notebook, the results appear beneath the code.
 
-# Reproducing this workflow
+Try executing this chunk by clicking the *Run* button within the chunk
+or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
 
-This workflow, is available as an interactive Rstudio notebook in the file `moiscrust.Rmd`. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run it in your computer, please, execute first the code chunk below. You will need to replace `eval = FALSE` with `eval = TRUE` in the header of the code chunk.
-
-```{r, eval = FALSE}
-install.packages("renv")
-library(renv)
-renv::restore()
+``` r
+plot(cars)
 ```
+
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or
+by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output
+will be saved alongside it (click the *Preview* button or press
+*Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the
+editor. Consequently, unlike *Knit*, *Preview* does not run any R code
+chunks. Instead, the output of the chunk when it was last run in the
+editor is displayed.
