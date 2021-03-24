@@ -4,10 +4,10 @@ title: |
   | a spatio-temporal continuous soil moisture dataset 
   | from a Mediterranean semiarid dryland 
   | from 2006 to 2020
-  | 
   | SUPPLEMENTARY MATERIAL
 institute:
   - corresponding: "Corresponding author, e-mail: joaquin.moreno@ua.es"
+  - code: "Code and workflow design."
   - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
   - crowther: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
   - ecology: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
@@ -23,7 +23,7 @@ author:
   - Victoria Ochoa:
       institute: [margalef] 
   - Blas M. Benito:
-      institute: [margalef]
+      institute: [margalef, code]
   - Fernando T. Maestre:
       institute: [margalef, ecology] 
 output:
@@ -60,13 +60,15 @@ citation_package: natbib
 
 # Summary
 
-XXX
+The **MOISCRUST** database contains volumetric water content (VWC, m³/m³) measures taken by soil moisture sensors EC-5, Decagon Devices Inc., Pullman, USA) every 120 minutes (17th November 2006 to 31th January 2017) and 150 minutes (1st February 2017 to 16th December 2020) from three replicates in five different microsites (*Stipa* tussocks, *Retama* shrubs, and areas with low, medium and high cover of biocrust-forming lichens) located in The Aranjuez Experimental Station (central Iberian Peninsula, 40⁰02’ N, 3⁰32’W; 590 m.a.s.l). During the long time-span these sensors have been working, there have been periods when data capture has not possible due to technical issues, and as consequence, 34.63% of the database records are missing entries. This reproducible workflow describes in detail the method used to impute missing data in the **MOISCRUST** database.
+
+The **MOISCRUST** database and this reproducible document are distributed under the license [`Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International`](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 # Reproducing this workflow
 
-This reproducible workflow is available as an interactive Rstudio notebook in the file `moiscrust.Rmd` stored in this repository. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run it in your computer, execute the code chunk below in your R session once you have `moiscrust.Rmd` opened in Rstudio. You will need to replace `r `eval = TRUE` with `r `eval = TRUE` in the header of the code chunk.
+This reproducible workflow is available as an interactive Rstudio notebook in the file **moiscrust.Rmd** stored in this repository. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run it in your computer, execute the code chunk below to prepare the session. You will need to replace `r `eval = TRUE` with `r `eval = TRUE` in the header of the code chunk.
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 install.packages("renv")
 library(renv)
 renv::restore()
@@ -74,9 +76,9 @@ renv::restore()
 
 # Data loading and preparation
 
-## Loading the required libraries
+## Installing and loading the required libraries
 
-The following libraries are required to run this workflow. These are already installed in the local `renv` folder, so there is no need to install them if you don't have them in your computer.
+The following libraries are required to run this workflow. These are already installed in the local **renv** folder, so there is no need to install them if they are not available in your computer.
 
 ```{r, eval = TRUE}
 #automatic install of packages if they are not readily available
@@ -91,21 +93,30 @@ required_packages <- c(
   "writexl",
   "RSQLite",
   "zip",
-  "knitr"
+  "knitr",
+  "DBI"
 )
 
 #loading packages
-invisible(lapply(required_packages, library, character.only = TRUE))
-
-#removing objects
-rm(required_packages)
+invisible(
+  lapply(
+    required_packages, 
+    library, 
+    character.only = TRUE
+    )
+  )
 
 #knitr options
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 knitr::knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)})
+
+#removing objects
+rm(required_packages)
 ```
 
-## Loading the data
+## Loading and preparing the raw data
+
+The raw data, stored in the file *moiscrust_raw.csv* was compiled by the members of [Maestre Lab](https://maestrelab.com/en/) from the data provided by the soil moisture sensors.
 
 ```{r, eval = TRUE}
 #load, clean names, and rename time columns
@@ -118,7 +129,42 @@ moiscrust <- data.table::fread(file = "moiscrust_raw.csv") %>%
   as.data.frame()
 ```
 
+```{r, echo = FALSE, eval = TRUE}
+kableExtra::kbl(
+  head(
+    moiscrust, 
+    20
+    )
+  ) %>% 
+  kableExtra::kable_styling(
+    position = "center", 
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header", 
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
+    ) %>% 
+  kableExtra::scroll_box(width = "100%")
+```
+
+
 ## Formatting dates and times
+
+The raw data contains two fields representing time, namely *date* (year, month, and day), and *time* (hour, minute, and seconds). Below we format these fields according to the POSIX standard, and add new fields adding criteria to subset the data by time: 
+
+  + *date_time*: Date and time in POSIX format.
+  + *date_time_id*: Unique identificator for each *date_time*.
+  + *year*: Year number.
+  + *year_day*: Day of the year.
+  + *month*: Month number.
+  + *month_day*: Day of the month.
+  + *week*: Week of the year.
+  + *week_day*: Day of the week.
 
 ```{r, eval = TRUE}
 #date to Year-month-day
@@ -166,7 +212,9 @@ moiscrust$week <- lubridate::week(moiscrust$date)
 moiscrust$week_day <- lubridate::wday(moiscrust$date)
 ```
 
-## Reordering columns
+## Reordering time and data columns and arranging the data into long format
+
+At this point, the *MOISCRUST* data has 15 columns representing soils moisture measures (microsites per three replicates per microsite), and 10 columns representing *time*. The data is also structured in what is known as a ["wide format"](https://sejdemyr.github.io/r-tutorials/basics/wide-and-long/). Below we reorder these columns to facilitate arranging the data into a "long format".
 
 ```{r, eval = TRUE}
 #names of the sensors
@@ -202,11 +250,7 @@ moiscrust <- moiscrust[, c(
   "week_day",
   sensors
 )]
-```
 
-## To long format
-
-```{r, eval = TRUE}
 #to long format
 moiscrust_long <- tidyr::pivot_longer(
   moiscrust,
@@ -216,7 +260,31 @@ moiscrust_long <- tidyr::pivot_longer(
 )
 ```
 
-## Data visualization
+```{r, echo = FALSE, eval = TRUE}
+kableExtra::kbl(
+  head(
+    moiscrust_long, 
+    20
+    )
+  ) %>% 
+  kableExtra::kable_styling(
+    position = "center", 
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header", 
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
+    )
+```
+
+## Visualization of the raw data
+
+Having the data in long format facilitates plotting and manipulation. The figure below shows the raw data, with missing data represented by the white color.
 
 ```{r, fig.width=12, fig.height=17, eval = TRUE}
 ggplot(moiscrust_long) + 
@@ -230,13 +298,13 @@ ggplot(moiscrust_long) +
   ylab("") + 
   xlab("Day of the year") +
   ggtitle("MOISCRUST database (raw data)") +
-  labs(fill = expression("Volumetric water content (cm³ water / cm³ soil)")) + 
+  labs(fill = expression("Volumetric water content (m³ water / m³ soil)")) + 
   theme(legend.key.width = unit(1, "cm"))
-
-ggsave(width = 12, height = 17, filename = "MOISCRUST_raw.pdf")
 ```
 
-## Number of NA per time-series
+## Number of NA per sensor
+
+Due to technical constraints, there is a large number of missing data in the *MOISCRUST* dataset. To better understand the extent of such missing data, the code below counts the number of missing entries per sensor.
 
 ```{r, eval = TRUE}
 #counting NA values per sensor
@@ -245,8 +313,8 @@ moiscrust_NA <- moiscrust_long %>%
   summarise(na_count = sum(is.na(soil_moisture))) %>% 
   mutate(na_count_percent = round((na_count * 100) / nrow(moiscrust), 1))
 
-#adding sensor sensor_group to the moiscrust_NA data frame
-moiscrust_NA$sensor_group <- c(
+#adding sensor microsite to the moiscrust_NA data frame
+moiscrust_NA$microsite <- c(
   "biocrust_high",
   "biocrust_high",
   "biocrust_high",
@@ -267,7 +335,7 @@ moiscrust_NA$sensor_group <- c(
 #reordering columns and arranging by na_count
 moiscrust_NA <- moiscrust_NA[, c(
   "sensor", 
-  "sensor_group", 
+  "microsite", 
   "na_count", 
   "na_count_percent"
   )] %>% 
@@ -287,7 +355,32 @@ kableExtra::kbl(moiscrust_NA) %>%
 
 # Imputation of missing data
 
+The imputation of missing data we implement here to impute missing data in *MOISCRUST* works by finding, for a given entry *y* with missing data at a time *t*, the sensor *x* with data for *t* that is in the same type of microsite (if possible), has the longest extent in common, and the highest correlation with the sensor to which *y* belongs, and estimates *y* with the linear model *y ~ x*.
+
 ## Developing criteria to find candidates for gap filling
+
+To generate the criteria to find the best possible candidate *x* to estimate the missing data *y*, we compute the common length and correlation between all pairs of sensors, and generate a column indicating whether they belong to the same microsite or not. With the values stored in these columns we compute a *selection score* based on the following expression:
+
+$$S_{x} = \%vc_{x, y} + (R_{x, y}^2 * 100) + \left\{
+\begin{array}{ll}
+      100, & \mbox{if $microsite_{x} == microsite_{y}$}\\
+      0, & \mbox{otherwise}
+\end{array}
+\right. $$
+
+Where:
+
++ $y$ is the sensor with a missing value to be estimated.
++ $x$ is the sensor to be used as candidate predictor to estimate the missing value in $y$.
++ $S_{x}$ is the selection score of the candidate sensor $x$, in the range [0, 300].
++ $\%vc_{x, y}$ is the percent of common valid cases of the sensors $x$ and $y$.
++ $R_{x, y}^2$ is the Pearson's R² of the common valid cases of the sensors $x$ and $y$.
++ $microsite_{x}$ and $microsite_{y}$ are the respective microsites of the sensors $x$ and $y$.
+
+During data imputation, for each missing value, the sensor with the higher selection score is used to estimate it. 
+
+These criteria are stored in the data frame **sensors_pairs**. Along with the computation of the selection score, the code below also computes a linear model for each pair $x ~ y$, and stores it in the object **sensors_pairs_models**. The identificators of these models are stored in the column *model_id* of the data frame **sensors_pairs**.
+
 
 ```{r, eval = TRUE}
 #combining sensors in pairs x-y
@@ -301,7 +394,7 @@ sensors_pairs <- combn(
 #adding combinations y-x so all pairs have both directions
 #removing repeated pairs
 #joining with moiscrust_NA to get sensor groups
-#add column same_sensor_group to check if x and y are or not in the same sensor group
+#add column same_microsite to check if x and y are or not in the same sensor group
 #add empty columns to store % of shared data, model's R squared, and model ID
 sensors_pairs <- sensors_pairs %>% 
   rbind(
@@ -316,26 +409,26 @@ sensors_pairs <- sensors_pairs %>%
     .keep_all = TRUE
   ) %>% 
   left_join(
-    moiscrust_NA[, c("sensor", "sensor_group")],
+    moiscrust_NA[, c("sensor", "microsite")],
     by = c("V1" = "sensor")
   ) %>% 
   left_join(
-    moiscrust_NA[, c("sensor", "sensor_group")],
+    moiscrust_NA[, c("sensor", "microsite")],
     by = c("V2" = "sensor")
   ) %>% 
   rename(
     y = V1,
     x = V2,
-    sensor_group_y = sensor_group.x, #not a mistake
-    sensor_group_x = sensor_group.y, #not a mistake
+    y_microsite = microsite.x, #not a mistake
+    x_microsite = microsite.y, #not a mistake
   ) %>% 
   mutate(
-    same_sensor_group = ifelse(
-      sensor_group_x == sensor_group_y, 
+    same_microsite = ifelse(
+      x_microsite == y_microsite, 
       TRUE, 
       FALSE
       ),
-    valid_cases_shared_percent = NA,
+    sensors_shared_valid_percent = NA,
     sensors_r_squared = NA,
     model_id = row_number()
   ) 
@@ -359,7 +452,7 @@ for(i in 1:nrow(sensors_pairs)){
   sensor_pair_i <- sensor_pair_i[complete.cases(sensor_pair_i), ]
    
   #common cases
-  sensors_pairs[i, "valid_cases_shared_percent"] <- 
+  sensors_pairs[i, "sensors_shared_valid_percent"] <- 
     nrow(sensor_pair_i) / nrow(moiscrust) * 100
   
   #R squared of the sensor pair
@@ -381,14 +474,14 @@ for(i in 1:nrow(sensors_pairs)){
 
 #selection score to find candidates during gap filling 
 #(sensors_r_squared * 100) +
-#valid_cases_shared_percent + 
-#same_sensor_group (TRUE = 100, FALSE = 0)
+#sensors_shared_valid_percent + 
+#same_microsite (TRUE = 100, FALSE = 0)
 sensors_pairs <- mutate(
   sensors_pairs,
   selection_score = 
     (sensors_r_squared * 100) + 
-    valid_cases_shared_percent + 
-    ifelse(same_sensor_group == TRUE, 100, 0)
+    sensors_shared_valid_percent + 
+    ifelse(same_microsite == TRUE, 100, 0)
 )
 
 #removing objects we don't need
@@ -399,12 +492,36 @@ rm(
   x_i,
   y_i
 )
+```
 
-#garbage collection
-invisible(gc())
+The resulting data frame, named **sensors_pairs**, has columns with the names of the sensor *y* (the one with missing data to impute), the sensor *x* (the candidate to be used as predictor to estimate *y*), their respective microsites, a column indicating if they belong to the same microsite, the percent of shared valid data, the R squared of their shared data, a 
+
+```{r, eval = TRUE, echo = FALSE}
+#showing the table
+kableExtra::kbl(
+  head(
+    sensors_pairs, 
+    20
+    )
+  ) %>% 
+  kable_styling(
+    position = "center", 
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
+    )
 ```
 
 ## Generating the x and y matrices to predict imputed values
+
+During data imputation, two data frames are needed. The data frame **x** contains the data of every sensor for every available time, while the data frame **y**, which starts with empty values, is where the imputed values, their confidence intervals, selection criteria, and other quality-related columns are going to be stored.
 
 ```{r, eval = TRUE}
 #creating data frame of predictors
@@ -425,13 +542,13 @@ colnames(y) <- c(
   "model_ci_lower", 
   "model_ci_upper", 
   "model_predictor",
-  "same_sensor_group",
+  "same_microsite",
   "sensors_r_squared",
-  "valid_cases_shared_percent",
+  "sensors_shared_valid_percent",
   "selection_score",
   "date_time_id",
   "sensor",
-  "sensor_group"
+  "microsite"
   )
 
 #transferring time id
@@ -439,9 +556,49 @@ y[, "date_time_id"] <- moiscrust[, "date_time_id"]
 y[, "interpolated"] <- FALSE
 ```
 
+The **x** data frame looks as follows: 
+
+```{r, eval = TRUE, echo = FALSE}
+#showing the table
+kableExtra::kbl(head(x, 20)) %>% 
+  kable_styling(
+    position = "center", 
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
+    )
+```
+
+And this is the **y** data frame, that will be filled during data imputation:
+
+```{r, eval = TRUE, echo = FALSE}
+#showing the table
+kableExtra::kbl(head(y, 20)) %>% 
+  kable_styling(
+    position = "center", 
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
+    )
+```
+
 ## Data imputation, step by step
 
-The steps to fill the gaps in the MOISCRUST database go as follows:
+The steps to fill the gaps in the **MOISCRUST** database go as follows:
 
 **1.** A given sensor name is selected: "stipa5063"
 
@@ -449,7 +606,7 @@ The steps to fill the gaps in the MOISCRUST database go as follows:
 sensor = "stipa5063"
 ```
 
-**2.** The sensors pairs from the table `sensors_pairs` where the selected sensor is `y` (the response variable) are selected.
+**2.** The sensors pairs from the table **sensors_pairs** where the selected sensor is *y* (the sensor which values are to be imputed) are selected.
 
 ```{r, eval = TRUE}
 sensors_pair <- sensors_pairs %>% 
@@ -460,12 +617,20 @@ sensors_pair <- sensors_pairs %>%
 kableExtra::kbl(sensors_pair) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
-**3.** The first row of the dataset `x` is selected.
+**3.** The first row of the data frame **x** is selected.
 
 ```{r, eval = TRUE}
 x_row <- x[1, ]
@@ -475,14 +640,22 @@ x_row <- x[1, ]
 kableExtra::kbl(x[1, ]) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
-**3.1.** If there is a recorded value of soil moisture for the sensor "stipa5063", goes to the next row, until there is a row with `NA`.
+**3.1.** If there is a valid value of soil moisture for the sensor "stipa5063", the algorithm goes to the next row, until there is a row with a missing value.
 
-**4.** If there is an empty value, the potential candidate predictors are selected from the row by removing sensors with NA, and the target sensor.
+**4.** If there is an missing value (*NA*), the potential candidate predictors are selected from the row by removing the data of other sensors with *NA*, and the data of the target sensor.
 
 ```{r, eval = TRUE}
 predictor_candidates <- as.vector(x[1, ])
@@ -496,12 +669,19 @@ predictor_candidates <- predictor_candidates[which(
 kableExtra::kbl(predictor_candidates) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
-**5.** From these predictors, the one with the highest selection score is selected from `sensors_pair` generated in the step **2.**.
+**5.** From these predictors, the one with the highest selection score is selected from the data frame **sensors_pair** generated in the step **2.**.
 
 ```{r, eval = TRUE}
 best_predictor <- sensors_pair %>% 
@@ -514,12 +694,20 @@ best_predictor <- sensors_pair %>%
 kableExtra::kbl(best_predictor) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
-**6.** The model to use, stored in the list `sensors_pairs_models`, is selected from the value `best_predictor$model_id`, and used to predict a value for the empty cell.
+**6.** The model to use, stored in the list **sensors_pairs_model**, is selected from *model_id* column of the **best_predictor** data frame , and used to predict a value for the empty cell.
 
 ```{r, eval = TRUE}
 predict(
@@ -531,13 +719,13 @@ predict(
   )$fit
 ```
 
-**7.** These values and others available in `best_predictor` are transferred to the same row in the matrix `y`.
+**7.** The imputed value, its confidence intervals, and other values about the imputation quality available in **best_predictor** are transferred to the same row in the data frame **y**.
 
-**8.** Once all the sensors and rows have been processed this way, the matrix `y` is joined with `moiscrust_long`, and its interpolated values are transferred to the `soil_moisture` column, along with other columns indicating the quality of the interpolation.
+**8.** Once all the sensors and rows have been processed this way, the matrix **y** is joined with **moiscrust_long**, and its interpolated values are transferred to the *soil_moisture* column, along with other columns indicating the quality of the interpolation.
 
 ## Applying the algorithm to the complete dataset
 
-The code applies the algorithm explained above to every sensor and row. Sensors are processed in parallel to speed up the gap-filling operation.
+The code below applies the algorithm to every sensor and row with missing data. Sensors are processed in parallel to speed up the data imputation operation.
 
 ```{r, eval = TRUE}
 #setup for parallel execution
@@ -556,12 +744,16 @@ doParallel::registerDoParallel(cl = temp_cluster)
     
 #parallelized loop (each sensor is processed in one separated thread)
 moiscrust_interpolation <- foreach::foreach(
-  sensor_i = sensors
+  sensor_i = sensors,
+  .packages = "tidyverse"
 ) %dopar% {
   
   #subset sensors_pairs
   sensors_pair_i <- sensors_pairs %>% 
     dplyr::filter(y == sensor_i)
+  
+  #fill microsite
+  y[, "microsite"] <-sensors_pair_i$y_microsite[1]
   
   #scanning the rows of x one by one
   for(row_i in 1:nrow(x)){
@@ -606,9 +798,8 @@ moiscrust_interpolation <- foreach::foreach(
     y[row_i, "model_predictor"] <- best_predictor_i$x
     y[row_i, "sensors_r_squared"] <- best_predictor_i$sensors_r_squared
     y[row_i, "selection_score"] <- best_predictor_i$selection_score
-    y[row_i, "valid_cases_shared_percent"] <- best_predictor_i$valid_cases_shared_percent
-    y[row_i, "sensor_group"] <- best_predictor_i$sensor_group_y
-    y[row_i, "same_sensor_group"] <- best_predictor_i$same_sensor_group
+    y[row_i, "sensors_shared_valid_percent"] <- best_predictor_i$sensors_shared_valid_percent
+    y[row_i, "same_microsite"] <- best_predictor_i$same_microsite
     
   }
   
@@ -630,7 +821,7 @@ rm(
 )
 ```
 
-To data frame and joining with moiscrust_long
+The imputation algorithm produces an object (a list) named **moiscrust_interpolation**, with one slot per sensor, each one with one **y** data frame containing the imputation results. Below we transform this object into the data frame **moiscrust_interpolation_long** and join it with **moiscrust_long**, to start preparing the database format.
 
 ```{r, eval = TRUE}
 #naming the output
@@ -659,7 +850,7 @@ moiscrust_long$soil_moisture <- ifelse(
 #adding a interpolation_quality flag following the criteria in the paper
 moiscrust_long$interpolation_quality <- ifelse(
   moiscrust_long$sensors_r_squared > 0.85 &
-  moiscrust_long$valid_cases_shared_percent > 20,
+  moiscrust_long$sensors_shared_valid_percent > 20,
   "acceptable",
   "poor"
 )
@@ -693,7 +884,7 @@ moiscrust_NA <- moiscrust_long %>%
 rm(moiscrust_interpolation)
 ```
 
-The interpolation has removed all gaps where there was a value to interpolate from.
+The interpolation has removed all gaps where there was a value to interpolate from, as shown in the table below.
 
 ```{r, eval = TRUE, echo = FALSE}
 kableExtra::kbl(
@@ -708,16 +899,54 @@ kableExtra::kbl(
   ) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
 ## Visualizing the interpolated time series
 
-Quality of the interpolation
+The **MOISCRUST** database looks as follows after applying the imputation algorithm.
 
-```{r, fig.width=12, fig.height=17, eval = TRUE}
+```{r, fig.width=12, fig.height=17, eval = TRUE, echo = FALSE}
+ggplot(moiscrust_long) + 
+  facet_wrap(
+    "year", 
+    scales = "free_x", 
+    ncol = 2
+    ) +
+  aes(
+    x = year_day, 
+    y = sensor, 
+    fill = soil_moisture
+    ) + 
+  geom_tile() + 
+  coord_cartesian(expand = FALSE) +
+  theme_bw() + 
+  scale_fill_viridis_c(
+    direction = -1, 
+    na.value = "white", 
+    option = "B"
+    ) +
+  theme(legend.position = "top") + 
+  ylab("") + 
+  xlab("Day of the year") +
+  ggtitle("MOISCRUST database (observed and interpolated records)") +
+  labs(fill = expression("Volumetric water content (m³ water / m³ soil)")) + 
+  theme(legend.key.width = unit(0.8, "cm"))
+```
+
+The plot above represents both observed and interpolated values, without a clear differentiation between each type. To provide an indicator of imputation quality, the imputation algorithm also generated a new column named *interpolation_quality*, where the observations are marked with the flag "observation", the imputed data where *x* and *y* shared more than 20% of valid cases and had an R² higher than 0.85 are marked with the flag "acceptable", and the imputed data below these thresholds are marked with the flag "poor". The plot below shows the values of these flags for each sensor and time, year per year.
+
+```{r, fig.width=12, fig.height=17, eval = TRUE, echo = FALSE}
 ggplot(moiscrust_long) + 
   facet_wrap(
     "year", 
@@ -753,124 +982,282 @@ ggplot(moiscrust_long) +
   labs(
     fill = expression("Data quality")) + 
   theme(legend.key.width = unit(1, "cm"))
-
-ggsave(
-  width = 12, 
-  height = 17, 
-  filename = "MOISCRUST_interpolated_quality.pdf"
-  )
-```
-
-The r squared between the predicted sensor values and the predictor are shown with transparency. Interpolated records with higher transparency may have lower quality.
-
-```{r, fig.width=12, fig.height=17, eval = TRUE}
-ggplot(moiscrust_long) + 
-  facet_wrap(
-    "year", 
-    scales = "free_x", 
-    ncol = 2
-    ) +
-  aes(
-    x = year_day, 
-    y = sensor, 
-    fill = soil_moisture
-    ) + 
-  geom_tile() + 
-  coord_cartesian(expand = FALSE) +
-  theme_bw() + 
-  scale_fill_viridis_c(
-    direction = -1, 
-    na.value = "white", 
-    option = "B"
-    ) +
-  theme(legend.position = "top") + 
-  ylab("") + 
-  xlab("Day of the year") +
-  ggtitle("MOISCRUST database (observed and interpolated records)") +
-  labs(fill = expression("Volumetric water content (cm³ water / cm³ soil)")) + 
-  theme(legend.key.width = unit(0.8, "cm"))
-
-ggsave(width = 12, height = 17, filename = "MOISCRUST_interpolated.pdf")
 ```
 
 # Data base format
 
-The dataset `moiscrust_long` is the database in long format already.
+The dataset **moiscrust_long** is the database in long format already. Now we can rename it to **moiscrust**.
 
-```{r, echo = FALSE, eval = TRUE}
-kableExtra::kbl(head(moiscrust_long)) %>% 
-  kable_styling(
-    position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
-    )
+```{r}
+moiscrust <- moiscrust_long
 ```
 
-Its columns are:
+The database columns are:
 
--   `date_time`: date and time in POSIX format.
--   `date_time_id`: integer, unique ID for each value of `date_time`.
--   `date`: date in format year-month-day.
--   `time`: time in format hour-minute.
--   `year`: integer, year.
--   `year_day`: integer, day of the year.
--   `month`: integer, month number.
--   `week`: integer, week of the year.
--   `week_day`: integer, day of the week.
--   `sensor`: character, sensor name.
--   `soil_moisture`: numeric, soil moisture value in $m^{3} water /m^{3} soil$.
--   `interpolated`: boolean, `TRUE` for interpolated records and `FALSE` for observations.
--   `model_estimate`: numeric, prediction of the linear model.
--   `model_ci_lower`: numeric, lower bound of the confidence interval of the estimate.
--   `model_ci_upper`: numeric, upper bound of the confidence interval of the estimate.
--   `model_predictor`: character, name of the sensor used as predictor in the linear model.
--   `same_sensor_group`: boolean, `TRUE` if the sensor and its predictor are in the same group ("stipa", "retama", "biocrust_low", "biocrust_medium", "biocrust_high").
--   `sensors_r_squared`: numeric, R squared between `sensor` and `model_predictor`.
--   `valid_cases_shared_percent`: numeric, percentage of shared valid cases between `sensor` and `model_predictor`, taking the total number of values in `date_time_id` as reference.
--   `selection_score`: numeric, value used to select the `model_predictor`, based on the sum of `same_sensor_group` (100 if `TRUE` and 0 if `FALSE`), `sensors_r_squared` multiplied by 100, and `valid_cases_shared_percent`.
--   `interpolation_quality`: character, with the values "observation" for observations, "acceptable" for interpolated values where `sensors_r_squared` is higher than 0.85 and `valid_cases_shared_percent` is higher than 20, and "poor" for interpolated values below at least one of these thresholds.
+-   *date_time*: date and time in POSIX format.
+-   *date_time_id*: integer, unique ID for each value of *date_time*.
+-   *date*: date in format year-month-day.
+-   *time*: time in format hour-minute.
+-   *year*: integer, year.
+-   *year_day*: integer, day of the year.
+-   *month*: integer, month number.
+-   *week*: integer, week of the year.
+-   *week_day*: integer, day of the week.
+-   *sensor*: character, sensor name.
+-   *soil_moisture*: numeric, soil moisture value in $m^{3} water /m^{3} soil$.
+-   *interpolated*: boolean, *TRUE* for interpolated records and *FALSE* for observations.
+-   *model_estimate*: numeric, prediction of the linear model.
+-   *model_ci_lower*: numeric, lower bound of the confidence interval of the estimate.
+-   *model_ci_upper*: numeric, upper bound of the confidence interval of the estimate.
+-   *model_predictor*: character, name of the sensor used as predictor in the linear model.
+-   *same_microsite*: boolean, *TRUE* if the sensor and its predictor are in the same group ("stipa", "retama", "biocrust_low", "biocrust_medium", "biocrust_high").
+-   *sensors_r_squared*: numeric, R squared between *sensor* and *model_predictor*.
+-   *sensors_shared_valid_percent*: numeric, percentage of shared valid cases between *sensor* and *model_predictor*, taking the total number of values in *date_time_id* as reference.
+-   *selection_score*: numeric, value used to select the *model_predictor*, based on the sum of *same_microsite* (100 if *TRUE* and 0 if *FALSE*), *sensors_r_squared* multiplied by 100, and *sensors_shared_valid_percent*.
+-   *interpolation_quality*: character, with the values "observation" for observations, "acceptable" for interpolated values where *sensors_r_squared* is higher than 0.85 and *sensors_shared_valid_percent* is higher than 20, and "poor" for interpolated values below at least one of these thresholds.
 
 ## Saving the data base in different formats
 
 To expand its usability as much as possible, we provide the data in four different formats: .RData, .csv, .xlsx, and SQLite.
 
 ```{r, eval = TRUE}
-#create directory for the database
-dir.create("database")
-
-#rename dataset
-moiscrust <- moiscrust_long
-
-#save as RData
-save(
-  moiscrust, 
-  file = "database/moiscrust.RData"
+#if the zip file does not exists, creates database directory and populates it
+if(!file.exists("database.zip")){
+  
+  dir.create("database")
+  
+  #save as RData
+  save(
+    moiscrust, 
+    file = "database/moiscrust.RData"
   )
-
-#save as csv
-write_excel_csv(
-  x = moiscrust,
-  path = "database/moiscrust.csv"
-)
-
-#save as excel file
-write_xlsx(
-  x = moiscrust,
-  path = "database/moiscrust.xlsx"
-)
-
-#save as SQLite
-drv <- dbDriver("SQLite")
-tfile <- "database/moiscrust.db"
-con <- dbConnect(drv, dbname = "database/moiscrust.db")
-dbWriteTable(con, "moiscrust", moiscrust, overwrite = TRUE)
-dbDisconnect(con)
-
-#compressing the file
-zip(
-  zipfile = "database.zip",
-  files = "database"
+  
+  #save as csv
+  readr::write_excel_csv(
+    x = moiscrust,
+    file = "database/moiscrust.csv"
   )
+  
+  #save as excel file
+  writexl::write_xlsx(
+    x = moiscrust,
+    path = "database/moiscrust.xlsx"
+  )
+  
+  #save as SQLite
+  db.driver <- DBI::dbDriver("SQLite")
+  db.connection <-  DBI::dbConnect(
+    db.driver, 
+    dbname = "database/moiscrust.db"
+    )
+  DBI::dbWriteTable(
+    db.connection, 
+    "moiscrust", 
+    moiscrust, 
+    overwrite = TRUE
+    )
+  DBI::dbDisconnect(db.connection)
+  
+  #compressing the file
+  zip::zip(
+    zipfile = "database.zip",
+    files = "database"
+  )
+  
+  #removing the database folder
+  unlink(
+    "database", 
+    recursive = TRUE
+    )
+  
+  #clean the R environment
+  rm(
+    db.connection,
+    db.driver,
+    moiscrust
+    )
+  
+}
 ```
 
-Code and workflow design by **Blas M. Benito** (blasbenito@gmail.com and @blasbenito)
+```{r, echo = FALSE}
+rm(
+  best_predictor,
+  moiscrust_interpolation_long,
+  moiscrust_long,
+  moiscrust_NA,
+  predictor_candidates,
+  sensor,
+  sensors,
+  sensors_pair,
+  sensors_pairs,
+  sensors_pairs_models,
+  x_row
+)
+```
+
+
+# Usage examples
+
+This section shows several simple ways to work with the database in R, focusing on the minimal code required to perform basic operations. But first we have to unzip **database.zip** and read **moiscrust.RData** into the R environment.
+
+```{r}
+#unzip the zip file with the database files
+zip::unzip("database.zip")
+
+#load the moiscrust dataframe
+load("database/moiscrust.RData")
+
+#delete the database folder
+  unlink(
+    "database", 
+    recursive = TRUE
+    )
+```
+
+## Plotting time-series of observed data for a given microsite and year
+
+The column *interpolated* contains `TRUE` for imputed data and `FALSE` for observed data, and therefore, it can be used to separate observed and imputed data right away. The column `microsite` groups together time-series belonging to the same microsite. Finally, the column `sensor` contains the data yielded by specific sensors.
+
+```{r, fig.width=9, fig.height=4}
+moiscrust %>% 
+  dplyr::filter(
+    interpolated == FALSE,
+    microsite == "stipa",
+    year == 2010
+  ) %>% 
+  ggplot2::ggplot() + 
+  ggplot2::aes(
+    x = date_time,
+    y = soil_moisture,
+    color = sensor
+  ) + 
+  ggplot2::geom_line() + 
+  ggplot2::theme_bw()
+  
+```
+
+## Plotting the daily average of a microsite for a given set of years
+
+To compute the daily average of a given microsite we first have to subset the data relative to such microsite for the given set of years. 
+
+To compute the mean of the three sensors of the selected microsite, the data is grouped by the columns `year` and `year_day`, and after that `dplyr::summarise()` is used to compute the average of `soil_moisture`, but removing `NA` values from the computation of the average.
+
+```{r, fig.width=9, fig.height=4, message = FALSE, warning = FALSE}
+moiscrust %>% 
+  dplyr::filter(
+    interpolated == FALSE,
+    microsite == "stipa",
+    year %in% c(2009, 2010, 2011)
+  ) %>% 
+  dplyr::group_by(year, year_day) %>% 
+  dplyr::summarise(
+    soil_moisture = mean(soil_moisture, na.rm = TRUE)
+    ) %>% 
+  ggplot2::ggplot() + 
+  ggplot2::aes(
+    x = year_day,
+    y = soil_moisture,
+    color = factor(year)
+  ) + 
+  ggplot2::geom_line() + 
+  ggplot2::theme_bw()
+```
+
+## Plotting the daily average of each microsite for a given set of years
+
+This case is very similar to the previous one, but here we remove the filter by microsite, and group by two variables instead: `date_time_id` and `microsite`.
+
+```{r, fig.width=9, fig.height=9, message = FALSE, warning = FALSE}
+moiscrust %>% 
+  dplyr::filter(
+    interpolated == FALSE,
+    year %in% c(2009, 2010, 2011)
+  ) %>% 
+  dplyr::group_by(year, year_day, microsite) %>% 
+  dplyr::summarise(
+    soil_moisture = mean(soil_moisture, na.rm = TRUE),
+    ) %>% 
+  ggplot2::ggplot() + 
+  ggplot2::facet_wrap("year", ncol = 1) +
+  ggplot2::aes(
+    x = year_day,
+    y = soil_moisture,
+    color = factor(microsite)
+  ) + 
+  ggplot2::geom_line() + 
+  ggplot2::theme_bw()
+```
+
+## Comparing microsites across years
+
+Changing the axes and replacing `ggplot2::geom_line()` with `ggplot2::geom_boxplot(notch = TRUE)` allows to compare the distributions of the soil moisture values between microsites across years.
+
+```{r, fig.width=6, fig.height=6, message = FALSE, warning = FALSE}
+moiscrust %>% 
+  dplyr::filter(
+    interpolated == FALSE,
+    year %in% c(2009, 2010, 2011)
+  ) %>% 
+  dplyr::group_by(year, year_day, microsite) %>% 
+  dplyr::summarise(
+    soil_moisture = mean(soil_moisture, na.rm = TRUE),
+    ) %>% 
+  ggplot2::ggplot() + 
+  ggplot2::facet_wrap("year", ncol = 1) +
+  ggplot2::aes(
+    x = soil_moisture,
+    y = microsite
+  ) + 
+  ggplot2::geom_boxplot(notch = TRUE) + 
+  ggplot2::theme_bw()
+```
+
+## Graphical modeling of temporal trends
+
+To model the temporal trends of the sensors (daily means over the years) for a given microsite the data must be grouped by `year`, `year_day`, and `microsite`. Adding a loess and a linear fit to the plot allows to quickly check temporal trends on each sensor at different time-scales.
+
+```{r, fig.width=9, fig.height=6, message = FALSE, warning = FALSE}
+moiscrust %>% 
+  dplyr::filter(
+    interpolated == FALSE,
+    microsite == "biocrust_low"
+  ) %>% 
+  dplyr::group_by(year, year_day, sensor) %>% 
+  dplyr::summarise(
+    soil_moisture = mean(soil_moisture, na.rm = TRUE),
+    ) %>% 
+  ggplot2::ggplot() + 
+  ggplot2::facet_wrap("sensor", ncol = 1) +
+  ggplot2::aes(
+    x = year,
+    y = soil_moisture
+  ) + 
+  ggplot2::geom_jitter(width = 0.25, alpha = 0.1) +
+  ggplot2::geom_smooth(col = "red4") +
+  ggplot2::geom_smooth(method = "lm", col = "blue4") +
+  ggplot2::theme_bw()
+```
+
+
+## Comparing temporal trends by microsite
+
+```{r, fig.width=9, fig.height=9, message = FALSE, warning = FALSE}
+moiscrust %>% 
+  dplyr::filter(
+    interpolated == FALSE
+  ) %>% 
+  dplyr::group_by(year, year_day, microsite) %>% 
+  dplyr::summarise(
+    soil_moisture = mean(soil_moisture, na.rm = TRUE),
+    ) %>% 
+  ggplot2::ggplot() + 
+  ggplot2::facet_wrap("microsite", ncol = 1) +
+  ggplot2::aes(
+    x = year,
+    y = soil_moisture
+  ) + 
+  ggplot2::geom_jitter(width = 0.25, alpha = 0.1) +
+  ggplot2::geom_smooth(method = "lm", col = "red4") +
+  ggplot2::theme_bw()
+```

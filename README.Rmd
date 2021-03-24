@@ -42,4 +42,4 @@ library(renv)
 renv::restore()
 ```
 
-*Code and workflow design by **Blas M. Benito** (blasbenito@gmail.com and @blasbenito)*
+*Code and workflow design by **Blas M. Benito** (blasbenito@gmail.com - [@blasbenito](https://twitter.com/BlasBenito))*

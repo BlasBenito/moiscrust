@@ -38,4 +38,4 @@ renv::restore()
 ```
 
 *Code and workflow design by **Blas M. Benito** (<blasbenito@gmail.com>
-and @blasbenito)*
+- \[@blasbenito\](<https://twitter.com/BlasBenito>))*
