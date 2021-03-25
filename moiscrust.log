@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.10.0 (TeX Live 2019/Debian)  (format=lualatex 2021.3.19)  24 MAR 2021 20:43
+This is LuaTeX, Version 1.10.0 (TeX Live 2019/Debian)  (format=lualatex 2021.3.19)  25 MAR 2021 12:29
  restricted system commands enabled.
 **moiscrust.tex
 (./moiscrust.tex
@@ -1261,28 +1261,28 @@ LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/n' will be
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/it' will be
-(Font)              scaled to size 11.00006pt on input line 171.
 LaTeX Font Info:    Font shape `TU/OpenSans(2)/m/n' will be
-(Font)              scaled to size 8.99994pt on input line 183.
+(Font)              scaled to size 8.99994pt on input line 166.
+LaTeX Font Info:    Font shape `TU/OpenSans(0)/m/it' will be
+(Font)              scaled to size 11.00006pt on input line 170.
 
-Package xcolor Warning: Incompatible color definition on input line 196.
+Package xcolor Warning: Incompatible color definition on input line 197.
 
 LaTeX Font Info:    Font shape `TU/OpenSans(2)/b/n' will be
-(Font)              scaled to size 8.99994pt on input line 198.
+(Font)              scaled to size 8.99994pt on input line 199.
 
-Package xcolor Warning: Incompatible color definition on input line 202.
+Package xcolor Warning: Incompatible color definition on input line 203.
 
 
-Package xcolor Warning: Incompatible color definition on input line 202.
+Package xcolor Warning: Incompatible color definition on input line 203.
 
 LaTeX Font Info:    Font shape `TU/OpenSans(0)/b/n' will be
-(Font)              scaled to size 13.20007pt on input line 210.
+(Font)              scaled to size 13.20007pt on input line 211.
 
-Package xcolor Warning: Incompatible color definition on input line 216.
+Package xcolor Warning: Incompatible color definition on input line 217.
 
 LaTeX Font Info:    Font shape `TU/OpenSans(2)/m/it' will be
-(Font)              scaled to size 8.99994pt on input line 218.
+(Font)              scaled to size 8.99994pt on input line 219.
 
 Package xcolor Warning: Incompatible color definition on input line 250.
 
@@ -1361,7 +1361,7 @@ Package xcolor Warning: Incompatible color definition on input line 534.
 
 Package xcolor Warning: Incompatible color definition on input line 534.
 
-<moiscrust_files/figure-latex/unnamed-chunk-8-1.pdf, id=85, 843.15pt x 1211.5262
+<moiscrust_files/figure-latex/unnamed-chunk-8-1.pdf, id=80, 843.15pt x 1211.5262
 5pt>
 File: moiscrust_files/figure-latex/unnamed-chunk-8-1.pdf Graphic file (type pdf)
 
@@ -1371,55 +1371,60 @@ d on input line 536.
 (luatex.def)             Requested size: 452.6568pt x 650.42473pt.
 [7] [8<./moiscrust_files/figure-latex/unnamed-chunk-8-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 546.
+Package xcolor Warning: Incompatible color definition on input line 547.
 
 
-Package xcolor Warning: Incompatible color definition on input line 583.
+Package xcolor Warning: Incompatible color definition on input line 584.
 
 
-Package xcolor Warning: Incompatible color definition on input line 583.
+Package xcolor Warning: Incompatible color definition on input line 584.
 
 [9] [10]
 
-Package xcolor Warning: Incompatible color definition on input line 686.
+Package xcolor Warning: Incompatible color definition on input line 687.
 
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 
-Underfull \vbox (badness 2617) detected at line 798
+Underfull \vbox (badness 2617) detected at line 799
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 [11]
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 
-Underfull \vbox (badness 10000) detected at line 798
+Underfull \vbox (badness 10000) detected at line 799
  []
 
 
-Underfull \vbox (badness 10000) detected at line 798
+Underfull \vbox (badness 10000) detected at line 799
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 [12]
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
 
 
-Package xcolor Warning: Incompatible color definition on input line 798.
+Package xcolor Warning: Incompatible color definition on input line 799.
+
+
+Overfull \hbox (368.83453pt too wide) in paragraph at lines 810--855
+ [][] 
+ []
 
 [13]
 
@@ -1442,6 +1447,17 @@ Package xcolor Warning: Incompatible color definition on input line 900.
 Package xcolor Warning: Incompatible color definition on input line 900.
 
 
+Overfull \hbox (537.27196pt too wide) in paragraph at lines 906--951
+ [][] 
+ []
+
+[15]
+Overfull \hbox (624.76807pt too wide) in paragraph at lines 960--1005
+ [][] 
+ []
+
+[16]
+
 Package xcolor Warning: Incompatible color definition on input line 1016.
 
 
@@ -1453,7 +1469,6 @@ Package xcolor Warning: Incompatible color definition on input line 1020.
 
 Package xcolor Warning: Incompatible color definition on input line 1026.
 
-[15]
 
 Package xcolor Warning: Incompatible color definition on input line 1031.
 
@@ -1461,366 +1476,248 @@ Package xcolor Warning: Incompatible color definition on input line 1031.
 Package xcolor Warning: Incompatible color definition on input line 1031.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1073.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1077.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1077.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1099.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1107.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1107.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1124.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1131.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1131.
-
-[16]
-
-Package xcolor Warning: Incompatible color definition on input line 1150.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1160.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1160.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1185.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1279.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1279.
-
-
-Overfull \vbox (1.70149pt too high) detected at line 1279
+Overfull \hbox (356.59373pt too wide) in paragraph at lines 1035--1068
+ [][] 
  []
-
-
-Package xcolor Warning: Incompatible color definition on input line 1279.
 
 [17]
 
-Package xcolor Warning: Incompatible color definition on input line 1279.
+Package xcolor Warning: Incompatible color definition on input line 1072.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1279.
+Package xcolor Warning: Incompatible color definition on input line 1076.
 
 
-Underfull \vbox (badness 10000) detected at line 1279
+Package xcolor Warning: Incompatible color definition on input line 1076.
+
+
+Overfull \hbox (537.27196pt too wide) in paragraph at lines 1080--1087
+ [][] 
  []
 
 
-Overfull \vbox (0.33163pt too high) detected at line 1279
- []
+Package xcolor Warning: Incompatible color definition on input line 1097.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1279.
+Package xcolor Warning: Incompatible color definition on input line 1105.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1105.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1122.
 
 [18]
 
-Package xcolor Warning: Incompatible color definition on input line 1279.
+Package xcolor Warning: Incompatible color definition on input line 1129.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1279.
+Package xcolor Warning: Incompatible color definition on input line 1129.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1288.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1349.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1349.
-
-
-Underfull \vbox (badness 10000) detected at line 1349
+Overfull \hbox (312.89966pt too wide) in paragraph at lines 1133--1140
+ [][] 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1349.
+Package xcolor Warning: Incompatible color definition on input line 1147.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1157.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1157.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1182.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1274.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1274.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1274.
 
 [19]
 
-Package xcolor Warning: Incompatible color definition on input line 1349.
+Package xcolor Warning: Incompatible color definition on input line 1274.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1349.
+Package xcolor Warning: Incompatible color definition on input line 1274.
 
 
-Underfull \vbox (badness 10000) detected at line 1349
+Underfull \vbox (badness 10000) detected at line 1274
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1349
+Underfull \vbox (badness 10000) detected at line 1274
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 1349.
+Package xcolor Warning: Incompatible color definition on input line 1274.
 
 [20]
 
-Package xcolor Warning: Incompatible color definition on input line 1349.
+Package xcolor Warning: Incompatible color definition on input line 1274.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1349.
+Package xcolor Warning: Incompatible color definition on input line 1274.
 
-<moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf, id=175, 843.15pt x 1219.55
+
+Package xcolor Warning: Incompatible color definition on input line 1283.
+
+[21]
+
+Package xcolor Warning: Incompatible color definition on input line 1344.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1344.
+
+
+Underfull \vbox (badness 10000) detected at line 1344
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 1344.
+
+[22]
+
+Package xcolor Warning: Incompatible color definition on input line 1344.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1344.
+
+
+Overfull \hbox (144.0875pt too wide) in paragraph at lines 1351--1386
+ [][] 
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 1395.
+
+[23]
+
+Package xcolor Warning: Incompatible color definition on input line 1423.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1423.
+
+<moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf, id=186, 843.15pt x 1219.55
 624pt>
 File: moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf Graphic file (type pdf
 )
 <use moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf>
 Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf  us
-ed on input line 1401.
+ed on input line 1425.
 (luatex.def)             Requested size: 449.69775pt x 650.45569pt.
-[21] [22<./moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf>]
-<moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf, id=195, 843.15pt x 1219.55
+
+Package xcolor Warning: Incompatible color definition on input line 1427.
+
+[24] [25<./moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 1431.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1431.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1443.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1481.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1481.
+
+
+Underfull \vbox (badness 10000) detected at line 1481
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 1481.
+
+[26]
+
+Package xcolor Warning: Incompatible color definition on input line 1481.
+
+
+Package xcolor Warning: Incompatible color definition on input line 1481.
+
+<moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf, id=206, 843.15pt x 1219.55
 624pt>
 File: moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf Graphic file (type pdf
 )
 <use moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf>
 Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf  us
-ed on input line 1413.
+ed on input line 1483.
 (luatex.def)             Requested size: 449.69775pt x 650.45569pt.
-[23] [24<./moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf>]
+[27] [28<./moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 1421.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1425.
+Package xcolor Warning: Incompatible color definition on input line 1491.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1425.
+Package xcolor Warning: Incompatible color definition on input line 1495.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1500.
-
-[25]
-
-Package xcolor Warning: Incompatible color definition on input line 1560.
+Package xcolor Warning: Incompatible color definition on input line 1495.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1560.
-
-
-Underfull \vbox (badness 10000) detected at line 1560
+Overfull \hbox (1392.00612pt too wide) in paragraph at lines 1499--1516
+ [][] 
  []
 
+[29]
 
-Underfull \vbox (badness 10000) detected at line 1560
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 1560.
-
-[26]
-
-Package xcolor Warning: Incompatible color definition on input line 1560.
+Package xcolor Warning: Incompatible color definition on input line 1591.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1560.
+Package xcolor Warning: Incompatible color definition on input line 1631.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1570.
+Package xcolor Warning: Incompatible color definition on input line 1631.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1584.
+Package xcolor Warning: Incompatible color definition on input line 1631.
+
+[30]
+
+Package xcolor Warning: Incompatible color definition on input line 1631.
 
 
-Package xcolor Warning: Incompatible color definition on input line 1584.
+Package xcolor Warning: Incompatible color definition on input line 1631.
 
-
-Package xcolor Warning: Incompatible color definition on input line 1598.
-
-[27]
-
-Package xcolor Warning: Incompatible color definition on input line 1615.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1615.
-
-<moiscrust_files/figure-latex/unnamed-chunk-35-1.pdf, id=228, 634.37pt x 279.042
-5pt>
-File: moiscrust_files/figure-latex/unnamed-chunk-35-1.pdf Graphic file (type pdf
-)
-<use moiscrust_files/figure-latex/unnamed-chunk-35-1.pdf>
-Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-35-1.pdf  us
-ed on input line 1617.
-(luatex.def)             Requested size: 469.76523pt x 206.63724pt.
-
-Package xcolor Warning: Incompatible color definition on input line 1632.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1653.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1653.
-
-
-Overfull \vbox (0.76237pt too high) detected at line 1653
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 1653.
-
-[28<./moiscrust_files/figure-latex/unnamed-chunk-35-1.pdf>]
-
-Package xcolor Warning: Incompatible color definition on input line 1653.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1653.
-
-<moiscrust_files/figure-latex/unnamed-chunk-36-1.pdf, id=241, 634.37pt x 279.042
-5pt>
-File: moiscrust_files/figure-latex/unnamed-chunk-36-1.pdf Graphic file (type pdf
-)
-<use moiscrust_files/figure-latex/unnamed-chunk-36-1.pdf>
-Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-36-1.pdf  us
-ed on input line 1655.
-(luatex.def)             Requested size: 469.76523pt x 206.63724pt.
-
-Package xcolor Warning: Incompatible color definition on input line 1666.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1687.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1687.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1687.
-
-[29<./moiscrust_files/figure-latex/unnamed-chunk-36-1.pdf>]
-
-Package xcolor Warning: Incompatible color definition on input line 1687.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1687.
-
-<moiscrust_files/figure-latex/unnamed-chunk-37-1.pdf, id=254, 634.37pt x 640.392
-5pt>
-File: moiscrust_files/figure-latex/unnamed-chunk-37-1.pdf Graphic file (type pdf
-)
-<use moiscrust_files/figure-latex/unnamed-chunk-37-1.pdf>
-Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-37-1.pdf  us
-ed on input line 1689.
-(luatex.def)             Requested size: 469.76523pt x 474.22504pt.
-
-Package xcolor Warning: Incompatible color definition on input line 1700.
-
-[30<./moiscrust_files/figure-latex/unnamed-chunk-37-1.pdf>]
-
-Package xcolor Warning: Incompatible color definition on input line 1720.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1720.
-
-<moiscrust_files/figure-latex/unnamed-chunk-38-1.pdf, id=266, 423.5825pt x 423.5
-825pt>
-File: moiscrust_files/figure-latex/unnamed-chunk-38-1.pdf Graphic file (type pdf
-)
-<use moiscrust_files/figure-latex/unnamed-chunk-38-1.pdf>
-Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-38-1.pdf  us
-ed on input line 1722.
-(luatex.def)             Requested size: 423.59439pt x 423.59439pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1633.
 [31]
-
-Package xcolor Warning: Incompatible color definition on input line 1734.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1756.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1756.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1756.
-
-[32<./moiscrust_files/figure-latex/unnamed-chunk-38-1.pdf>]
-
-Package xcolor Warning: Incompatible color definition on input line 1756.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1756.
-
-<moiscrust_files/figure-latex/unnamed-chunk-39-1.pdf, id=286, 640.3925pt x 423.5
-825pt>
-File: moiscrust_files/figure-latex/unnamed-chunk-39-1.pdf Graphic file (type pdf
-)
-<use moiscrust_files/figure-latex/unnamed-chunk-39-1.pdf>
-Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-39-1.pdf  us
-ed on input line 1758.
-(luatex.def)             Requested size: 469.75941pt x 310.71861pt.
-
-Package xcolor Warning: Incompatible color definition on input line 1764.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1784.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1784.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1784.
-
-[33<./moiscrust_files/figure-latex/unnamed-chunk-39-1.pdf>]
-
-Package xcolor Warning: Incompatible color definition on input line 1784.
-
-
-Package xcolor Warning: Incompatible color definition on input line 1784.
-
-<moiscrust_files/figure-latex/unnamed-chunk-40-1.pdf, id=304, 640.3925pt x 640.3
-925pt>
-File: moiscrust_files/figure-latex/unnamed-chunk-40-1.pdf Graphic file (type pdf
-)
-<use moiscrust_files/figure-latex/unnamed-chunk-40-1.pdf>
-Package luatex.def Info: moiscrust_files/figure-latex/unnamed-chunk-40-1.pdf  us
-ed on input line 1786.
-(luatex.def)             Requested size: 469.75941pt x 469.75941pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1788.
-[34] [35<./moiscrust_files/figure-latex/unnamed-chunk-40-1.pdf>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1788.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1633.
 (./moiscrust.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1788.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1788.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1633.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1633.
 Package rerunfilecheck Info: File `moiscrust.out' has not changed.
-(rerunfilecheck)             Checksum: 9F54465426BFC479FA6E9E92B2BFA1C8;871.
+(rerunfilecheck)             Checksum: A03EAC80764454F7BF57C145FE7D0F04;747.
 )
 
 Here is how much of LuaTeX's memory you used:
- 23079 strings out of 481365
+ 22988 strings out of 481365
  125171,953878 words of node,token memory allocated
  523 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 8 attribute, 57 glue_spec,
  8 attribute_list, 1 write, 1 pdf_action nodes
-   avail lists: 2:3750,3:171,4:813,5:1415,6:26,7:7333,8:47,9:3035,10:11,11:176
- 39051 multiletter control sequences out of 65536+600000
- 100 fonts using 25951411 bytes
- 59i,11n,118p,934b,401s stack positions out of 5000i,500n,10000p,200000b,100000s
+   avail lists: 1:1,2:3533,3:181,4:813,5:1415,6:25,7:7340,8:47,9:2666,10:10,11:1
+99
+ 39013 multiletter control sequences out of 65536+600000
+ 100 fonts using 25951327 bytes
+ 59i,11n,118p,934b,405s stack positions out of 5000i,500n,10000p,200000b,100000s
 </usr/share/texmf/fonts/opentype/public/lm-math/latinmodern-math.otf></usr/share
 /texmf/fonts/opentype/public/lm-math/latinmodern-math.otf></usr/share/texlive/te
 xmf-dist/fonts/truetype/ascender/opensans/OpenSans-Italic.ttf></usr/share/texliv
 e/texmf-dist/fonts/truetype/ascender/opensans/OpenSans-Bold.ttf></usr/share/texl
 ive/texmf-dist/fonts/truetype/ascender/opensans/OpenSans-Regular.ttf>
-Output written on moiscrust.pdf (35 pages, 6414884 bytes).
+Output written on moiscrust.pdf (31 pages, 4528312 bytes).
 
-PDF statistics: 363 PDF objects out of 1000 (max. 8388607)
- 279 compressed objects within 3 object streams
- 96 named destinations out of 1000 (max. 131072)
- 49 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 278 PDF objects out of 1000 (max. 8388607)
+ 216 compressed objects within 3 object streams
+ 79 named destinations out of 1000 (max. 131072)
+ 41 words of extra memory for PDF output out of 10000 (max. 100000000)
 
