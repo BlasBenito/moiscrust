@@ -4,7 +4,6 @@ from a Mediterranean semiarid dryland
 from 2006 to 2020  
 SUPPLEMENTARY MATERIAL
 ================
-true
 
 # Reproducing this workflow
 
