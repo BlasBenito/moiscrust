@@ -7,6 +7,7 @@ title: |
   | SUPPLEMENTARY MATERIAL
 institute:
   - corresponding: "Corresponding author, e-mail: joaquin.moreno@ua.es"
+  - code: "Code and workflow design."
   - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
   - crowther: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
   - ecology: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
@@ -22,7 +23,7 @@ author:
   - Victoria Ochoa:
       institute: [margalef] 
   - Blas M. Benito:
-      institute: [margalef]
+      institute: [margalef, code]
   - Fernando T. Maestre:
       institute: [margalef, ecology] 
 output:
@@ -59,13 +60,13 @@ citation_package: natbib
 
 # Summary
 
-The `MOISCRUST` database contains volumetric water content (VWC, m³/m³) measures taken by soil moisture sensors EC-5, Decagon Devices Inc., Pullman, USA) every 120 minutes (17th November 2006 to 31th January 2017) and 150 minutes (1st February 2017 to 16th December 2020) from three replicates in five different microsites (*Stipa* tussocks, *Retama* shrubs, and areas with low, medium and high cover of biocrust-forming lichens) located in The Aranjuez Experimental Station (central Iberian Peninsula, 40⁰02’ N, 3⁰32’W; 590 m.a.s.l). During the long time-span these sensors have been working, there have been periods when data capture has not possible due to technical issues, and as consequence, 34.63% of the database records are missing entries. This reproducible workflow describes in detail the method used to impute missing data in the `MOISCRUST` database.
+The **MOISCRUST** database contains volumetric water content (VWC, m³/m³) measures taken by soil moisture sensors EC-5, Decagon Devices Inc., Pullman, USA) every 120 minutes (17th November 2006 to 31th January 2017) and 150 minutes (1st February 2017 to 16th December 2020) from three replicates in five different microsites (*Stipa* tussocks, *Retama* shrubs, and areas with low, medium and high cover of biocrust-forming lichens) located in The Aranjuez Experimental Station (central Iberian Peninsula, 40⁰02’ N, 3⁰32’W; 590 m.a.s.l). During the long time-span these sensors have been working, there have been periods when data capture has not possible due to technical issues, and as consequence, 34.63% of the database records are missing entries. This reproducible workflow describes in detail the method used to impute missing data in the **MOISCRUST** database.
 
-The `MOISCRUST` database and this reproducible document are distributed under the license [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by/4.0/legalcode).
+The **MOISCRUST** database and this reproducible document are distributed under the license [`Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International`](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 # Reproducing this workflow
 
-This reproducible workflow is available as an interactive Rstudio notebook in the file `moiscrust.Rmd` stored in this repository. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run it in your computer, execute the code chunk below in your R session once you have `moiscrust.Rmd` opened in Rstudio. You will need to replace `r `eval = TRUE` with `r `eval = TRUE` in the header of the code chunk.
+This reproducible workflow is available as an interactive Rstudio notebook in the file **moiscrust.Rmd** stored in this repository. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run it in your computer, execute the code chunk below to prepare the session. You will need to replace `r `eval = TRUE` with `r `eval = TRUE` in the header of the code chunk.
 
 ```{r, eval = FALSE}
 install.packages("renv")
@@ -77,13 +78,12 @@ renv::restore()
 
 ## Installing and loading the required libraries
 
-The following libraries are required to run this workflow. These are already installed in the local `renv` folder, so there is no need to install them if they are not available in your computer.
+The following libraries are required to run this workflow. These are already installed in the local **renv** folder, so there is no need to install them if they are not available in your computer.
 
 ```{r, eval = TRUE}
 #automatic install of packages if they are not readily available
 required_packages <- c(
   "data.table",
-  "janitor",
   "tidyverse",
   "kableExtra",
   "foreach",
@@ -92,7 +92,8 @@ required_packages <- c(
   "writexl",
   "RSQLite",
   "zip",
-  "knitr"
+  "knitr",
+  "DBI"
 )
 
 #loading packages
@@ -119,11 +120,6 @@ The raw data, stored in the file *moiscrust_raw.csv* was compiled by the members
 ```{r, eval = TRUE}
 #load, clean names, and rename time columns
 moiscrust <- data.table::fread(file = "moiscrust_raw.csv") %>% 
-  janitor::clean_names() %>% 
-  dplyr::rename(
-    date = dates,
-    time = hour
-    ) %>% 
   as.data.frame()
 ```
 
@@ -217,21 +213,21 @@ At this point, the *MOISCRUST* data has 15 columns representing soils moisture m
 ```{r, eval = TRUE}
 #names of the sensors
 sensors <- c(
-  "retama5094",
-  "retama5062",
-  "retama5063",
-  "stipa5094",
-  "stipa5062",
-  "stipa5063",
-  "bs_cl5094",
-  "bs_cl5062",
-  "bs_cl5063",
-  "bs_cm5094",
-  "bs_cm5062",
-  "bs_cm5063",
-  "bs_ch5094",
-  "bs_ch5062",
-  "bs_ch5063"
+  "retama_1",
+  "retama_2",
+  "retama_3",
+  "stipa_1",
+  "stipa_2",
+  "stipa_3",
+  "bare_soil_1",
+  "bare_soil_2",
+  "bare_soil_3",
+  "biocrust_medium_1",
+  "biocrust_medium_2",
+  "biocrust_medium_3",
+  "biocrust_high_1",
+  "biocrust_high_2",
+  "biocrust_high_3"
 )
 
 #reordering columns of moiscrust to have time in the left side
@@ -300,7 +296,7 @@ ggplot(moiscrust_long) +
   theme(legend.key.width = unit(1, "cm"))
 ```
 
-## Number of NA per time-series
+## Number of NA per sensor
 
 Due to technical constraints, there is a large number of missing data in the *MOISCRUST* dataset. To better understand the extent of such missing data, the code below counts the number of missing entries per sensor.
 
@@ -313,12 +309,12 @@ moiscrust_NA <- moiscrust_long %>%
 
 #adding sensor microsite to the moiscrust_NA data frame
 moiscrust_NA$microsite <- c(
+  "bare_soil",
+  "bare_soil",
+  "bare_soil",
   "biocrust_high",
   "biocrust_high",
   "biocrust_high",
-  "biocrust_low",
-  "biocrust_low",
-  "biocrust_low",
   "biocrust_medium",
   "biocrust_medium",
   "biocrust_medium",
@@ -492,7 +488,7 @@ rm(
 )
 ```
 
-The resulting data frame, named *sensors_pairs*, has columns with the names of the sensor *y* (the one with missing data to impute), the sensor *x* (the candidate to be used as predictor to estimate *y*), their respective microsites, a column indicating if they belong to the same microsite, the percent of shared valid data, the R squared of their shared data, a 
+The resulting data frame, named **sensors_pairs**, has columns with the names of the sensor *y* (the one with missing data to impute), the sensor *x* (the candidate to be used as predictor to estimate *y*), their respective microsites, a column indicating if they belong to the same microsite, the percent of shared valid data, the R squared of their shared data, a 
 
 ```{r, eval = TRUE, echo = FALSE}
 #showing the table
@@ -504,8 +500,16 @@ kableExtra::kbl(
   ) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
@@ -553,36 +557,50 @@ The **x** data frame looks as follows:
 kableExtra::kbl(head(x, 20)) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
 And this is the **y** data frame, that will be filled during data imputation:
-
-The **x** data frame looks as follows: 
 
 ```{r, eval = TRUE, echo = FALSE}
 #showing the table
 kableExtra::kbl(head(y, 20)) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
 ## Data imputation, step by step
 
-The steps to fill the gaps in the *MOISCRUST* database go as follows:
+The steps to fill the gaps in the **MOISCRUST** database go as follows:
 
-**1.** A given sensor name is selected: "stipa5063"
+**1.** A given sensor name is selected: "retama_2"
 
 ```{r, eval = TRUE}
-sensor = "stipa5063"
+sensor = "retama_2"
 ```
 
-**2.** The sensors pairs from the table `sensors_pairs` where the selected sensor is `y` (the response variable) are selected.
+**2.** The sensors pairs from the table **sensors_pairs** where the selected sensor is *y* (the sensor which values are to be imputed) are selected.
 
 ```{r, eval = TRUE}
 sensors_pair <- sensors_pairs %>% 
@@ -593,8 +611,16 @@ sensors_pair <- sensors_pairs %>%
 kableExtra::kbl(sensors_pair) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
@@ -608,14 +634,22 @@ x_row <- x[1, ]
 kableExtra::kbl(x[1, ]) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
 **3.1.** If there is a valid value of soil moisture for the sensor "stipa5063", the algorithm goes to the next row, until there is a row with a missing value.
 
-**4.** If there is an missing value (*NA*), the potential candidate predictors are selected from the row by removing the data of other sensors with *NA*, and the data of the target sensor.
+**4.** If there is a missing value (*NA*), the potential candidate predictors are selected from the row by removing the data of other sensors with *NA*, and the data of the target sensor.
 
 ```{r, eval = TRUE}
 predictor_candidates <- as.vector(x[1, ])
@@ -629,8 +663,15 @@ predictor_candidates <- predictor_candidates[which(
 kableExtra::kbl(predictor_candidates) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
@@ -647,8 +688,16 @@ best_predictor <- sensors_pair %>%
 kableExtra::kbl(best_predictor) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
@@ -697,6 +746,9 @@ moiscrust_interpolation <- foreach::foreach(
   sensors_pair_i <- sensors_pairs %>% 
     dplyr::filter(y == sensor_i)
   
+  #fill microsite
+  y[, "microsite"] <-sensors_pair_i$y_microsite[1]
+  
   #scanning the rows of x one by one
   for(row_i in 1:nrow(x)){
     
@@ -741,7 +793,6 @@ moiscrust_interpolation <- foreach::foreach(
     y[row_i, "sensors_r_squared"] <- best_predictor_i$sensors_r_squared
     y[row_i, "selection_score"] <- best_predictor_i$selection_score
     y[row_i, "sensors_shared_valid_percent"] <- best_predictor_i$sensors_shared_valid_percent
-    y[row_i, "microsite"] <- best_predictor_i$y_microsite
     y[row_i, "same_microsite"] <- best_predictor_i$same_microsite
     
   }
@@ -842,8 +893,16 @@ kableExtra::kbl(
   ) %>% 
   kable_styling(
     position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
+    latex_options = c(
+      "HOLD_position", 
+      "striped", 
+      "repeat_header",
+      "scale_down"
+      ), 
+    bootstrap_options = c(
+      "striped", 
+      "hover"
+      )
     )
 ```
 
@@ -851,7 +910,7 @@ kableExtra::kbl(
 
 The **MOISCRUST** database looks as follows after applying the imputation algorithm.
 
-```{r, fig.width=12, fig.height=17, eval = TRUE}
+```{r, fig.width=12, fig.height=17, eval = TRUE, echo = FALSE}
 ggplot(moiscrust_long) + 
   facet_wrap(
     "year", 
@@ -877,13 +936,11 @@ ggplot(moiscrust_long) +
   ggtitle("MOISCRUST database (observed and interpolated records)") +
   labs(fill = expression("Volumetric water content (m³ water / m³ soil)")) + 
   theme(legend.key.width = unit(0.8, "cm"))
-
-ggsave(width = 12, height = 17, filename = "MOISCRUST_interpolated.pdf")
 ```
 
-Of course, these are both observed and interpolated values, without a clear differentiation between each type. To provide an indicator of imputation quality, the imputation algorithm also generated a new column named *interpolation_quality*, where the observations are marked with the flag "observation", the imputed data where *x* and *y* shared more than 20% of valid cases and had an R² higher than 0.85 are marked with the flag "acceptable", and the imputed data below these thresholds are marked with the flag "poor". The plot below shows the values of these flags for each sensor and time, year per year.
+The plot above represents both observed and interpolated values, without a clear differentiation between each type. To provide an indicator of imputation quality, the imputation algorithm also generated a new column named *interpolation_quality*, where the observations are marked with the flag "observation", the imputed data where *x* and *y* shared more than 20% of valid cases and had an R² higher than 0.85 are marked with the flag "acceptable", and the imputed data below these thresholds are marked with the flag "poor". The plot below shows the values of these flags for each sensor and time, year per year.
 
-```{r, fig.width=12, fig.height=17, eval = TRUE}
+```{r, fig.width=12, fig.height=17, eval = TRUE, echo = FALSE}
 ggplot(moiscrust_long) + 
   facet_wrap(
     "year", 
@@ -921,44 +978,15 @@ ggplot(moiscrust_long) +
   theme(legend.key.width = unit(1, "cm"))
 ```
 
-# Database format
+# Data base format
 
-The dataset `moiscrust_long` is the database in long format already. Now we rename it to `moiscrust`.
+The dataset **moiscrust_long** is the database in long format already. Now we can rename it to **moiscrust**.
 
 ```{r}
 moiscrust <- moiscrust_long
 ```
 
-
-```{r, echo = FALSE, eval = TRUE}
-#removing objects we don't need
-rm(
-  best_predictor,
-  moiscrust_interpolation_long,
-  moiscrust_long,
-  moiscrust_NA,
-  predictor_candidates,
-  sensors_pair,
-  sensors_pairs,
-  sensors_pairs_models,
-  x_row,
-  sensor,
-  sensors
-)
-
-#garbage collection
-invisible(gc())
-
-#showing the table
-kableExtra::kbl(head(moiscrust)) %>% 
-  kable_styling(
-    position = "center", 
-    latex_options = c("HOLD_position", "striped", "repeat_header"), 
-    bootstrap_options = c("striped", "hover")
-    )
-```
-
-Its columns are:
+The database columns are:
 
 -   *date_time*: date and time in POSIX format.
 -   *date_time_id*: integer, unique ID for each value of *date_time*.
@@ -987,8 +1015,8 @@ Its columns are:
 To expand its usability as much as possible, we provide the data in four different formats: .RData, .csv, .xlsx, and SQLite.
 
 ```{r, eval = TRUE}
-#if it does not exists, creates database directory and populates it
-if(!dir.exists("database")){
+#if the zip file does not exists, creates database directory and populates it
+if(!file.exists("database.zip")){
   
   dir.create("database")
   
@@ -999,30 +1027,66 @@ if(!dir.exists("database")){
   )
   
   #save as csv
-  write_excel_csv(
+  readr::write_excel_csv(
     x = moiscrust,
-    path = "database/moiscrust.csv"
+    file = "database/moiscrust.csv"
   )
   
   #save as excel file
-  write_xlsx(
+  writexl::write_xlsx(
     x = moiscrust,
     path = "database/moiscrust.xlsx"
   )
   
   #save as SQLite
-  drv <- dbDriver("SQLite")
-  tfile <- "database/moiscrust.db"
-  con <- dbConnect(drv, dbname = "database/moiscrust.db")
-  dbWriteTable(con, "moiscrust", moiscrust, overwrite = TRUE)
-  dbDisconnect(con)
+  db.driver <- DBI::dbDriver("SQLite")
+  db.connection <-  DBI::dbConnect(
+    db.driver, 
+    dbname = "database/moiscrust.db"
+    )
+  DBI::dbWriteTable(
+    db.connection, 
+    "moiscrust", 
+    moiscrust, 
+    overwrite = TRUE
+    )
+  DBI::dbDisconnect(db.connection)
   
   #compressing the file
-  zip(
+  zip::zip(
     zipfile = "database.zip",
     files = "database"
   )
   
+  #removing the database folder
+  unlink(
+    "database", 
+    recursive = TRUE
+    )
+  
+  #clean the R environment
+  rm(
+    db.connection,
+    db.driver,
+    moiscrust
+    )
+  
 }
-
 ```
+
+```{r, echo = FALSE}
+rm(
+  best_predictor,
+  moiscrust_interpolation_long,
+  moiscrust_long,
+  moiscrust_NA,
+  predictor_candidates,
+  sensor,
+  sensors,
+  sensors_pair,
+  sensors_pairs,
+  sensors_pairs_models,
+  x_row
+)
+```
+
