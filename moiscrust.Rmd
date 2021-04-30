@@ -1,19 +1,18 @@
 ---
+classoption: table
 title: |
   | The MOISCRUST dataset:
-  | a spatio-temporal continuous soil moisture dataset 
+  | a long soil moisture dataset 
   | from a Mediterranean semiarid dryland 
   | from 2006 to 2020
   | SUPPLEMENTARY MATERIAL
 institute:
-  - corresponding: "Corresponding author, e-mail: joaquin.moreno@ua.es"
-  - code: "Code and workflow design."
   - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
   - crowther: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
   - ecology: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
 author:
   - Joaquín Moreno:
-       institute: [corresponding, margalef]
+       institute: [margalef]
   - Sergio Asensio:
       institute: [margalef]
   - Miguel Berdugo:
@@ -23,7 +22,7 @@ author:
   - Victoria Ochoa:
       institute: [margalef] 
   - Blas M. Benito:
-      institute: [margalef, code]
+      institute: [margalef]
   - Fernando T. Maestre:
       institute: [margalef, ecology] 
 output:
@@ -36,8 +35,8 @@ output:
     keep_tex: yes
     latex_engine: lualatex
     number_sections: yes
-    toc: yes
-    toc_depth: 1
+    toc: no
+    toc_depth: 0
     df_print: kable
     pandoc_args:
       - '--lua-filter=scholarly-metadata.lua'
@@ -54,6 +53,8 @@ output:
       - '--lua-filter=author-info-blocks.lua'
 code_folding: show
 citation_package: natbib
+urlcolor: blue
+linkcolor: blue
 ---
 
 \newpage
@@ -62,11 +63,11 @@ citation_package: natbib
 
 The **MOISCRUST** database contains volumetric water content (VWC, m³/m³) measures taken by soil moisture sensors EC-5, Decagon Devices Inc., Pullman, USA) every 120 minutes (17th November 2006 to 31th January 2017) and 150 minutes (1st February 2017 to 16th December 2020) from three replicates in five different microsites (*Stipa* tussocks, *Retama* shrubs, and areas with bare soil, and medium and high cover of biocrust-forming lichens) located in The Aranjuez Experimental Station (central Iberian Peninsula, 40⁰02’ N, 3⁰32’W; 590 m.a.s.l). During the long time-span these sensors have been working, there have been periods when data capture has not possible due to technical issues, and as consequence, 34.63% of the database records are missing entries. This reproducible workflow describes in detail the method used to impute missing data in the **MOISCRUST** database.
 
-The **MOISCRUST** database and this reproducible document are distributed under the license [`Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International`](https://creativecommons.org/licenses/by/4.0/legalcode).
+The **MOISCRUST** database and this reproducible document are distributed under the license [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 # Reproducing this workflow
 
-This reproducible workflow is available as an interactive Rstudio notebook in the file **moiscrust.Rmd** stored in this repository. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run it in your computer, execute the code chunk below to prepare the session. You will need to replace `r `eval = TRUE` with `r `eval = TRUE` in the header of the code chunk.
+This reproducible workflow is available as an interactive Rstudio notebook in the file **moiscrust.Rmd** stored in this repository. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. To run it in your computer, execute the code chunk below to prepare the session. You will need to replace `r eval = TRUE` with `r eval = TRUE` in the header of the code chunk.
 
 ```{r, eval = FALSE}
 install.packages("renv")
@@ -80,12 +81,15 @@ renv::restore()
 
 The following libraries are required to run this workflow. These are already installed in the local **renv** folder, so there is no need to install them if they are not available in your computer.
 
-```{r, eval = TRUE}
+```{r, eval = TRUE, message = FALSE, error = FALSE, warning = FALSE}
 #automatic install of packages if they are not readily available
 required_packages <- c(
   "data.table",
-  "tidyverse",
-  "kableExtra",
+  "dplyr",
+  "magrittr",
+  "tidyr",
+  "ggplot2",
+  # "kableExtra",
   "foreach",
   "doParallel",
   "readr",
@@ -107,7 +111,7 @@ invisible(
 
 #knitr options
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-knitr::knit_hooks$set(document = function(x) {sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)})
+# knitr::knit_hooks$set(document = function(x) {sub('\\usepackage{xcolor}', '\\usepackage[table]{xcolor}', x, fixed = TRUE)})
 
 #removing objects
 rm(required_packages)
@@ -119,7 +123,7 @@ The raw data, stored in the file *moiscrust_raw.csv* was compiled by the members
 
 ```{r, eval = TRUE}
 #load, clean names, and rename time columns
-moiscrust <- data.table::fread(file = "moiscrust_raw.csv") %>% 
+moiscrust <- data.table::fread(file = "data/moiscrust_raw.csv") %>% 
   as.data.frame()
 ```
 
@@ -513,7 +517,7 @@ kableExtra::kbl(
     )
 ```
 
-## Generating the x and y matrices to predict imputed values
+## Generating the x and y matrices to impute missing values
 
 During data imputation, two data frames are needed. The data frame **x** contains the data of every sensor for every available time, while the data frame **y**, which starts with empty values, is where the imputed values, their confidence intervals, selection criteria, and other quality-related columns are going to be stored.
 
@@ -717,23 +721,16 @@ predict(
 
 **8.** Once all the sensors and rows have been processed this way, the matrix **y** is joined with **moiscrust_long**, and its interpolated values are transferred to the *soil_moisture* column, along with other columns indicating the quality of the interpolation.
 
-## Applying the algorithm to the complete dataset
+## Applying the imputation algorithm to the complete dataset
 
 The code below applies the algorithm to every sensor and row with missing data. Sensors are processed in parallel to speed up the data imputation operation.
 
 ```{r, eval = TRUE}
 #setup for parallel execution
-if(.Platform$OS.type == "windows"){
-  temp_cluster <- parallel::makeCluster(
-    parallel::detectCores() - 1,
-    type = "PSOCK"
-  )
-} else {
-  temp_cluster <- parallel::makeCluster(
-    parallel::detectCores() - 1,
-    type = "FORK"
-  )
-}
+temp_cluster <- parallel::makeCluster(
+  parallel::detectCores() - 1,
+  type = "PSOCK"
+)
 doParallel::registerDoParallel(cl = temp_cluster)
     
 #parallelized loop (each sensor is processed in one separated thread)
@@ -815,7 +812,7 @@ rm(
 )
 ```
 
-The imputation algorithm produces an object (a list) named **moiscrust_interpolation**, with one slot per sensor, each one with one **y** data frame containing the imputation results. Below we transform this object into the data frame **moiscrust_interpolation_long** and join it with **moiscrust_long**, to start preparing the database format.
+The imputation algorithm produces a list named **moiscrust_interpolation**, with one slot per sensor, each one with one **y** data frame containing the imputation results. Below we transform this object into the data frame **moiscrust_interpolation_long** and join it with **moiscrust_long**, to start preparing the database format.
 
 ```{r, eval = TRUE}
 #naming the output
@@ -978,15 +975,123 @@ ggplot(moiscrust_long) +
   theme(legend.key.width = unit(1, "cm"))
 ```
 
-# Data base format
+# Incorporating weather data at daily resolution
 
-The dataset **moiscrust_long** is the database in long format already. Now we can rename it to **moiscrust**.
+The file `data/daily_weather_aranjuez.csv` contains daily records of solar radiation (daily sum), temperature (maximum and minimum, in ºC), rainfall (daily sum, in mm.), and humidity (in percentage). To join this file with the `moiscrust` dataset, here we import it, aggregate `moiscrust` at daily resolution using only observations, and finally join both datasets by date.
+
+```{r}
+#importing the table
+weather <- data.table::fread("data/daily_weather_aranjuez.csv") %>%
+  as.data.frame()
+
+#formatting date
+weather$date <- format(
+  as.POSIXct(
+    strptime(
+      weather$date,
+      "%d/%m/%Y",
+      tz = ""
+    )
+  ),
+  format = "%Y-%m-%d"
+)
+
+#function to compute the mode of a character vector
+char_mode <- function(x){
+  x.unique <- unique(na.omit(x))
+  x.unique[which.max(tabulate(match(x, x.unique)))]
+}
+
+#aggregating moiscrust at daily resolution
+moiscrust_daily <- moiscrust_long %>% 
+  dplyr::group_by(sensor, year, year_day) %>% 
+  dplyr::summarise(
+    date = date[1],
+    month = month[1],
+    month_day = month_day[1],
+    week = week[1],
+    week_day = week_day[1],
+    soil_moisture_min = suppressWarnings(min(soil_moisture, na.rm = TRUE)),
+    soil_moisture_mean = mean(soil_moisture, na.rm = TRUE),
+    soil_moisture_max = suppressWarnings(max(soil_moisture, na.rm = TRUE)),
+    interpolated = ifelse(sum(interpolated) > 0, TRUE, FALSE),
+    model_estimate = mean(model_estimate, na.rm = TRUE),
+    model_ci_lower = mean(model_ci_lower, na.rm = TRUE),
+    model_ci_upper = mean(model_ci_upper, na.rm = TRUE),
+    model_predictor = char_mode(model_predictor),
+    same_microsite = char_mode(same_microsite),
+    sensors_shared_valid_percent = mean(sensors_shared_valid_percent, na.rm = TRUE),
+    selection_score = mean(selection_score, na.rm = TRUE),
+    microsite = microsite[1],
+    interpolation_quality = char_mode(interpolation_quality)
+  ) %>% 
+  as.data.frame()
+
+#NaN to NA
+is.nan.data.frame <- function(x){
+  do.call(cbind, lapply(x, is.nan))
+}
+moiscrust_daily[is.nan(moiscrust_daily)] <- NA
+
+#joining by date
+moiscrust_weather <- dplyr::left_join(
+  moiscrust_daily,
+  weather,
+  by = "date"
+) %>% dplyr::filter(
+  interpolated == FALSE
+) %>% 
+  dplyr::select(
+    -contains("model_"),
+    -same_microsite,
+    -sensors_shared_valid_percent,
+    -selection_score,
+    -interpolation_quality,
+    -year.y,
+    -month.y
+    ) %>% 
+  dplyr::rename(
+    year = year.x,
+    month = month.x,
+    temperature_max = temperature_maximum,
+    temperature_min = temperature_minimum
+  ) %>% 
+  dplyr::transmute(
+    date,
+    year,
+    year_day,
+    season,
+    month,
+    month_day,
+    week,
+    week_day,
+    microsite,
+    sensor,
+    soil_moisture_min,
+    soil_moisture_mean = round(soil_moisture_mean, 3),
+    soil_moisture_max,
+    solar_radiation_sum,
+    temperature_max,
+    temperature_min,
+    rainfall_sum,
+    humidity_average
+  ) %>% 
+  na.omit()
+```
+
+The resulting table, `moiscrust_weather`, now has daily observations of soil humidity coupled with daily weather data.
+
+# Preparing database formats
+
+## Format description
+
+The dataset **moiscrust_long** is the database in long format already. Below we rename it to **moiscrust**, and describe its columns.
 
 ```{r}
 moiscrust <- moiscrust_long
 ```
 
-The database columns are:
+The columns of the `moiscrust` table are:
 
 -   *date_time*: date and time in POSIX format.
 -   *date_time_id*: integer, unique ID for each value of *date_time*.
@@ -1023,6 +1128,7 @@ if(!file.exists("database.zip")){
   #save as RData
   save(
     moiscrust, 
+    moiscrust_weather,
     file = "database/moiscrust.RData"
   )
   
@@ -1031,10 +1137,17 @@ if(!file.exists("database.zip")){
     x = moiscrust,
     file = "database/moiscrust.csv"
   )
+    readr::write_excel_csv(
+    x = moiscrust_weather,
+    file = "database/moiscrust_weather.csv"
+  )
   
   #save as excel file
   writexl::write_xlsx(
-    x = moiscrust,
+    x = list(
+      moiscrust = moiscrust,
+      moiscrust_weather = moiscrust_weather
+      ),
     path = "database/moiscrust.xlsx"
   )
   
@@ -1048,6 +1161,12 @@ if(!file.exists("database.zip")){
     db.connection, 
     "moiscrust", 
     moiscrust, 
+    overwrite = TRUE
+    )
+    DBI::dbWriteTable(
+    db.connection, 
+    "moiscrust_weather", 
+    moiscrust_weather, 
     overwrite = TRUE
     )
   DBI::dbDisconnect(db.connection)
@@ -1074,6 +1193,7 @@ if(!file.exists("database.zip")){
 }
 ```
 
+
 ```{r, echo = FALSE}
 rm(
   best_predictor,
@@ -1086,7 +1206,9 @@ rm(
   sensors_pair,
   sensors_pairs,
   sensors_pairs_models,
-  x_row
+  x_row,
+  weather,
+  moiscrust_daily
 )
 ```
 
