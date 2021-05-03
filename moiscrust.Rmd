@@ -2,10 +2,8 @@
 classoption: table
 title: |
   | MOISCRUST:
-  | a soil moisture database 
-  | from a Mediterranean semiarid dryland 
-  | from 2006 to 2020
-  | SUPPLEMENTARY MATERIAL
+  | 14 years of soil moisture records
+  | from a Mediterranean semiarid dryland
 institute:
   - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
   - crowther: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
@@ -62,7 +60,7 @@ toc-title: "Table of contents"
 
 # Summary
 
-The **MOISCRUST** database contains volumetric water content (VWC, m³/m³) measures taken by soil moisture sensors EC-5 (Decagon Devices Inc., Pullman, USA) every 120 minutes (17th November 2006 to 31th January 2017) and 150 minutes (1st February 2017 to 16th December 2020) from three replicates in five different microsites (*Stipa* tussocks, *Retama* shrubs, and areas with bare soil, and medium and high cover of biocrust-forming lichens) located in The Aranjuez Experimental Station (central Iberian Peninsula, 40⁰02’ N, 3⁰32’W; 590 m.a.s.l). During the long time-span these sensors have been working, there have been periods when data capture has not possible due to technical issues, and as consequence, 34.63% of the database records are missing entries. This reproducible notebook describes in detail the method used to impute missing data in the **MOISCRUST** database.
+The **MOISCRUST** database contains volumetric water content (VWC, m³/m³) records captured by sensors EC-5 (Decagon Devices Inc., Pullman, USA) every 120 minutes (17th November 2006 to 31th January 2017) and 150 minutes (1st February 2017 to 16th December 2020) from three replicates in five different microsites (*Stipa* tussocks, *Retama* shrubs, and areas with bare soil, and medium and high cover of biocrust-forming lichens) located in The Aranjuez Experimental Station (central Iberian Peninsula, 40⁰02’ N, 3⁰32’W; 590 m.a.s.l). During the long time-span these sensors have been working, there have been periods when data capture has not possible due to technical issues, and as consequence, 34.63% of the database records are missing entries. This reproducible notebook describes in detail the method used to impute missing data in the **MOISCRUST** database.
 
 The **MOISCRUST** database and this reproducible notebook are distributed under the license [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by/4.0/legalcode).
 
