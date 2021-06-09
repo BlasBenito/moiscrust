@@ -1,0 +1,74 @@
+---
+classoption: table
+title: |
+  | Fourteen years 
+  | of continuous soil moisture records
+  | from plant and biocrust-dominated microsites
+institute:
+  - 1: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
+  - 2: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
+  - 3: "Departamento de Farmacología, Farmacognosia y Botánica, Facultad de Farmacia, Universidad Complutense de Madrid, Madrid, Spain."
+  - 4: "Departamento de Biología y Geología, Física y Química Inorgánica, Escuela Superior de Ciencias Experimentales y Tecnológicas, Universidad Rey Juan Carlos, Calle Tulipán s/n, 28933 Móstoles, Madrid, Spain."
+  - 5: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
+author:
+  - Joaquín Moreno:
+       institute: [1]
+       correspondence: "yes"
+       email: joaquin.moreno@ua.es
+  - Sergio Asensio:
+      institute: [1]
+  - Miguel Berdugo:
+      institute: [1, 2]
+  - Beatriz Gozalo:
+      institute: [1]
+  - Victoria Ochoa:
+      institute: [1] 
+  - David Sánchez-Pescador:
+      institute: [3, 4]
+  - Blas M. Benito:
+      institute: [1]
+      code: "yes"
+      email: blasbenito@gmail.com
+  - Fernando T. Maestre:
+      institute: [1, 5] 
+output:
+  pdf_document:
+    fig_caption: yes
+    fig_width: 9
+    highlight: tango
+    includes:
+      in_header: header.tex
+    keep_tex: yes
+    latex_engine: lualatex
+    number_sections: yes
+    toc: no
+    toc_depth: 1
+    df_print: kable
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+  html_document:
+    theme: cerulean
+    fig_caption: yes
+    highlight: tango
+    toc: no
+    toc_depth: 1
+    number_sections: yes
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+code_folding: show
+citation_package: natbib
+urlcolor: blue
+linkcolor: blue
+toc-title: "Table of contents"
+---
+
+\let\thefootnote\relax\footnotetext{Code and reproducible workflow created by Blas M. Benito}
+
+\newpage 
+\tableofcontents 
+
+# Summary
+
+## dos

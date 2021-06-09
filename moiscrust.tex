@@ -38,7 +38,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdfauthor={Joaquín Moreno1; Sergio Asensio1; Miguel Berdugo1,2; Beatriz Gozalo1; Victoria Ochoa1; Blas M. Benito1; Fernando T. Maestre1,3},
+  pdfauthor={Joaquín Moreno1,; Sergio Asensio1; Miguel Berdugo1,2; Beatriz Gozalo1; Victoria Ochoa1; David Sánchez-Pescador3,4; Blas M. Benito1,; Fernando T. Maestre1,5},
   colorlinks=true,
   linkcolor=blue,
   filecolor=Maroon,
@@ -135,31 +135,44 @@
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
-\title{MOISCRUST:\\
-14 years of soil moisture records\\
-from a Mediterranean semiarid dryland}
-\author{Joaquín Moreno\textsuperscript{1} \and Sergio Asensio\textsuperscript{1} \and Miguel Berdugo\textsuperscript{1,2} \and Beatriz Gozalo\textsuperscript{1} \and Victoria Ochoa\textsuperscript{1} \and Blas M. Benito\textsuperscript{1} \and Fernando T. Maestre\textsuperscript{1,3}}
+\title{Fourteen years\\
+of continuous soil moisture records\\
+from plant and biocrust-dominated microsites}
+\author{Joaquín Moreno\textsuperscript{1,$\mathsection{}$} \and Sergio Asensio\textsuperscript{1} \and Miguel Berdugo\textsuperscript{1,2} \and Beatriz Gozalo\textsuperscript{1} \and Victoria Ochoa\textsuperscript{1} \and David Sánchez-Pescador\textsuperscript{3,4} \and Blas M. Benito\textsuperscript{1,$\dagger{}$} \and Fernando T. Maestre\textsuperscript{1,5}}
 \date{}
 
 \begin{document}
 \maketitle
 
-\renewcommand*\contentsname{Table of contents}
-{
-\hypersetup{linkcolor=}
-\setcounter{tocdepth}{1}
-\tableofcontents
-}
 \textsuperscript{1} Instituto Multidisciplinar para el Estudio del Medio
 ``Ramon Margalef'', Universidad de Alicante, Edificio Nuevos Institutos,
 Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
 Spain.\\
 \textsuperscript{2} Institut Department of Environmental Systems
 Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland.\\
-\textsuperscript{3} Departamento de Ecología, Universidad de Alicante,
+\textsuperscript{3} Departamento de Farmacología, Farmacognosia y
+Botánica, Facultad de Farmacia, Universidad Complutense de Madrid,
+Madrid, Spain.\\
+\textsuperscript{4} Departamento de Biología y Geología, Física y
+Química Inorgánica, Escuela Superior de Ciencias Experimentales y
+Tecnológicas, Universidad Rey Juan Carlos, Calle Tulipán s/n, 28933
+Móstoles, Madrid, Spain.\\
+\textsuperscript{5} Departamento de Ecología, Universidad de Alicante,
 Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
 Alicante, Spain.
 
+\textsuperscript{$\mathsection{}$} Corresponding author:
+\href{mailto:joaquin.moreno@ua.es}{Joaquín Moreno
+\textless{}\href{mailto:joaquin.moreno@ua.es}{\nolinkurl{joaquin.moreno@ua.es}}\textgreater{}}
+
+\textsuperscript{$\dagger{}$} Code author:
+\href{mailto:blasbenito@gmail.com}{Blas M. Benito
+\textless{}\href{mailto:blasbenito@gmail.com}{\nolinkurl{blasbenito@gmail.com}}\textgreater{}}
+
+\let\thefootnote\relax\footnotetext{Code and reproducible workflow created by Blas M. Benito}
+
+\newpage 
+\tableofcontents 
 \newpage
 
 \hypertarget{summary}{%
@@ -184,6 +197,8 @@ distributed under the license
 \href{https://creativecommons.org/licenses/by/4.0/legalcode}{Creative
 Commons Attribution-NonCommercial-ShareAlike 4.0 International}.
 
+\newpage
+
 \hypertarget{reproducing-this-notebook}{%
 \section{Reproducing this notebook}\label{reproducing-this-notebook}}
 
@@ -200,7 +215,6 @@ header of the code chunk.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{install.packages}\NormalTok{(}\StringTok{"renv"}\NormalTok{)}
-\FunctionTok{library}\NormalTok{(renv)}
 \NormalTok{renv}\SpecialCharTok{::}\FunctionTok{restore}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
@@ -209,33 +223,14 @@ header of the code chunk.
 \section{Data loading and
 preparation}\label{data-loading-and-preparation}}
 
-\hypertarget{installing-and-loading-the-required-libraries}{%
-\subsection{Installing and loading the required
-libraries}\label{installing-and-loading-the-required-libraries}}
+\hypertarget{loading-the-required-libraries}{%
+\subsection{Loading the required
+libraries}\label{loading-the-required-libraries}}
 
 The following R libraries are required to run this notebook.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\#automatic install of packages if they are not readily available}
-\NormalTok{required\_packages }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
-  \StringTok{"data.table"}\NormalTok{,}
-  \StringTok{"dplyr"}\NormalTok{,}
-  \StringTok{"magrittr"}\NormalTok{,}
-  \StringTok{"tidyr"}\NormalTok{,}
-  \StringTok{"ggplot2"}\NormalTok{,}
-  \StringTok{"kableExtra"}\NormalTok{,}
-  \StringTok{"foreach"}\NormalTok{,}
-  \StringTok{"doParallel"}\NormalTok{,}
-  \StringTok{"readr"}\NormalTok{,}
-  \StringTok{"writexl"}\NormalTok{,}
-  \StringTok{"RSQLite"}\NormalTok{,}
-  \StringTok{"zip"}\NormalTok{,}
-  \StringTok{"knitr"}\NormalTok{,}
-  \StringTok{"DBI"}
-\NormalTok{)}
-
-\CommentTok{\#loading packages}
 \FunctionTok{library}\NormalTok{(}\StringTok{"data.table"}\NormalTok{)}
 \FunctionTok{library}\NormalTok{(}\StringTok{"dplyr"}\NormalTok{)}
 \FunctionTok{library}\NormalTok{(}\StringTok{"magrittr"}\NormalTok{)}
@@ -250,9 +245,6 @@ The following R libraries are required to run this notebook.
 \FunctionTok{library}\NormalTok{(}\StringTok{"zip"}\NormalTok{)}
 \FunctionTok{library}\NormalTok{(}\StringTok{"knitr"}\NormalTok{)}
 \FunctionTok{library}\NormalTok{(}\StringTok{"DBI"}\NormalTok{)}
-
-\CommentTok{\#removing objects}
-\FunctionTok{rm}\NormalTok{(required\_packages)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -458,6 +450,27 @@ date\_time & date\_time\_id & date & time & year & year\_day & month & month\_da
 \end{tabular}}
 \end{table}
 
+\hypertarget{replacing-negative-numbers-with-zeros}{%
+\subsection{Replacing negative numbers with
+zeros}\label{replacing-negative-numbers-with-zeros}}
+
+The MOISCRUST database has several negative values falling within the
+margin of error of the sensors. To remove these anomalous values we set
+them to zero.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{moiscrust\_long }\OtherTok{\textless{}{-}}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{mutate}\NormalTok{(}
+\NormalTok{  moiscrust\_long,}
+  \AttributeTok{soil\_moisture =} \FunctionTok{ifelse}\NormalTok{(}
+\NormalTok{    soil\_moisture }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{,}
+    \DecValTok{0}\NormalTok{,}
+\NormalTok{    soil\_moisture}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{visualization-of-the-raw-data}{%
 \subsection{Visualization of the raw
 data}\label{visualization-of-the-raw-data}}
@@ -496,7 +509,7 @@ the white color.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 \hypertarget{number-of-na-per-sensor}{%
 \subsection{Number of NA per sensor}\label{number-of-na-per-sensor}}
@@ -1383,7 +1396,7 @@ imputation algorithm.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-28-1.pdf}
+\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf}
 
 The plot above represents both observed and interpolated values, without
 a clear differentiation between each type. To provide an indicator of
@@ -1435,7 +1448,7 @@ the values of these flags for each sensor and time, year per year.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf}
+\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf}
 
 \hypertarget{incorporating-weather-data-at-daily-resolution}{%
 \section{Incorporating weather data at daily
@@ -1496,15 +1509,7 @@ only observations, and finally join both datasets by date.
     \AttributeTok{interpolation\_quality =} \FunctionTok{char\_mode}\NormalTok{(interpolation\_quality)}
 \NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{as.data.frame}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## `summarise()` has grouped output by 'sensor', 'year'. You can override using the `.groups` argument.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \CommentTok{\#NaN to NA}
 \NormalTok{is.nan.data.frame }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)\{}
   \FunctionTok{do.call}\NormalTok{(cbind, }\FunctionTok{lapply}\NormalTok{(x, is.nan))}
@@ -1687,7 +1692,7 @@ compressed and named \texttt{database.zip}.
   
   \CommentTok{\#save as SQLite}
 \NormalTok{  db.driver }\OtherTok{\textless{}{-}}\NormalTok{ DBI}\SpecialCharTok{::}\FunctionTok{dbDriver}\NormalTok{(}\StringTok{"SQLite"}\NormalTok{)}
-\NormalTok{  db.connection }\OtherTok{\textless{}{-}}\NormalTok{  DBI}\SpecialCharTok{::}\FunctionTok{dbConnect}\NormalTok{(}
+\NormalTok{  db.connection }\OtherTok{\textless{}{-}}\NormalTok{ DBI}\SpecialCharTok{::}\FunctionTok{dbConnect}\NormalTok{(}
 \NormalTok{    db.driver, }
     \AttributeTok{dbname =} \StringTok{"database/moiscrust.db"}
 \NormalTok{    )}

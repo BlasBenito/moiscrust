@@ -22,11 +22,14 @@ local stringify = utils.stringify
 local default_marks
 local default_marks = {
   corresponding_author = FORMAT == 'latex'
-    and {pandoc.RawInline('latex', '*')}
-    or {pandoc.Str '✉'},
+    and {pandoc.RawInline('latex', '$\\mathsection{}$')}
+    or {pandoc.Str '⋆'},
   equal_contributor = FORMAT == 'latex'
     and {pandoc.RawInline('latex', '$\\dagger{}$')}
     or {pandoc.Str '*'},
+  code_author = FORMAT == 'latex'
+    and {pandoc.RawInline('latex', '$\\dagger{}$')}
+    or {pandoc.Str '†'},
 }
 
 local function intercalate(lists, elem)
@@ -44,6 +47,10 @@ end
 --- Check whether the given author is a corresponding author
 local function is_corresponding_author(author)
   return author.correspondence and author.email
+end
+
+local function is_code_author(author)
+  return author.code and author.email
 end
 
 --- Create inlines for a single author (includes all author notes)
@@ -64,6 +71,9 @@ local function author_inline_generator (get_mark)
     end
     if is_corresponding_author(author) then
       author_marks[#author_marks + 1] = get_mark 'corresponding_author'
+    end
+    if is_code_author(author) then
+      author_marks[#author_marks + 1] = get_mark 'code_author'
     end
     local res = List.clone(author.name)
     res[#res + 1] = pandoc.Superscript(intercalate(author_marks, {pandoc.Str ','}))
@@ -123,12 +133,40 @@ local function create_correspondence_blocks(authors, mark)
   local correspondence = List:new{
     pandoc.Superscript(mark'corresponding_author'),
     pandoc.Space(),
-    pandoc.Str'Correspondence:',
+    pandoc.Str'Corresponding author:',
     pandoc.Space()
   }
   local sep = List:new{pandoc.Str',',  pandoc.Space()}
   return {
     pandoc.Para(correspondence .. intercalate(corresponding_authors, sep))
+  }
+end
+
+local function create_code_blocks(authors, mark)
+  local code_authors = List:new{}
+  for _, author in ipairs(authors) do
+    if is_code_author(author) then
+      local mailto = 'mailto:' .. pandoc.utils.stringify(author.email)
+      local author_with_mail = List:new(
+        author.name .. List:new{pandoc.Space(),  pandoc.Str '<'} ..
+        author.email .. List:new{pandoc.Str '>'}
+      )
+      local link = pandoc.Link(author_with_mail, mailto)
+      table.insert(code_authors, {link})
+    end
+  end
+  if #code_authors == 0 then
+    return nil
+  end
+  local code_authors_block = List:new{
+    pandoc.Superscript(mark'code_author'),
+    pandoc.Space(),
+    pandoc.Str'Code author:',
+    pandoc.Space()
+  }
+  local sep = List:new{pandoc.Str',',  pandoc.Space()}
+  return {
+    pandoc.Para(code_authors_block .. intercalate(code_authors, sep))
   }
 end
 
@@ -159,6 +197,7 @@ return {
       body:extend(create_equal_contributors_block(doc.meta.author, mark) or {})
       body:extend(create_affiliations_blocks(doc.meta.institute) or {})
       body:extend(create_correspondence_blocks(doc.meta.author, mark) or {})
+      body:extend(create_code_blocks(doc.meta.author, mark) or {})
       body:extend(doc.blocks)
 
       -- Overwrite authors with formatted values. We use a single, formatted

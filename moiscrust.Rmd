@@ -1,29 +1,47 @@
 ---
 classoption: table
 title: |
-  | MOISCRUST:
-  | 14 years of soil moisture records
-  | from a Mediterranean semiarid dryland
+  | Fourteen years 
+  | of continuous soil moisture records
+  | from plant and biocrust-dominated microsites
 institute:
-  - margalef: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
-  - crowther: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
-  - ecology: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
+  - 1: "Instituto Multidisciplinar para el Estudio del Medio “Ramon Margalef”, Universidad de Alicante, Edificio Nuevos Institutos, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Spain."
+  - 2: "Institut Department of Environmental Systems Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland."
+  - 3: "Departamento de Farmacología, Farmacognosia y Botánica, Facultad de Farmacia, Universidad Complutense de Madrid, Madrid, Spain."
+  - 4: "Departamento de Biología y Geología, Física y Química Inorgánica, Escuela Superior de Ciencias Experimentales y Tecnológicas, Universidad Rey Juan Carlos, Calle Tulipán s/n, 28933 Móstoles, Madrid, Spain."
+  - 5: "Departamento de Ecología, Universidad de Alicante, Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig, Alicante, Spain."
 author:
   - Joaquín Moreno:
-       institute: [margalef]
+       institute: [1]
+       correspondence: "yes"
+       email: joaquin.moreno@ua.es
   - Sergio Asensio:
-      institute: [margalef]
+      institute: [1]
   - Miguel Berdugo:
-      institute: [margalef, crowther]
+      institute: [1, 2]
   - Beatriz Gozalo:
-      institute: [margalef]
+      institute: [1]
   - Victoria Ochoa:
-      institute: [margalef] 
+      institute: [1] 
+  - David Sánchez-Pescador:
+      institute: [3, 4]
   - Blas M. Benito:
-      institute: [margalef]
+      institute: [1]
+      code: "yes"
+      email: blasbenito@gmail.com
   - Fernando T. Maestre:
-      institute: [margalef, ecology] 
+      institute: [1, 5] 
 output:
+  html_document:
+    theme: cerulean
+    fig_caption: yes
+    highlight: tango
+    toc: no
+    toc_depth: 1
+    number_sections: yes
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
   pdf_document:
     fig_caption: yes
     fig_width: 9
@@ -33,19 +51,9 @@ output:
     keep_tex: yes
     latex_engine: lualatex
     number_sections: yes
-    toc: yes
+    toc: no
     toc_depth: 1
     df_print: kable
-    pandoc_args:
-      - '--lua-filter=scholarly-metadata.lua'
-      - '--lua-filter=author-info-blocks.lua'
-  html_document:
-    theme: cerulean
-    fig_caption: yes
-    highlight: tango
-    toc: yes
-    toc_depth: 1
-    number_sections: yes
     pandoc_args:
       - '--lua-filter=scholarly-metadata.lua'
       - '--lua-filter=author-info-blocks.lua'
@@ -56,7 +64,11 @@ linkcolor: blue
 toc-title: "Table of contents"
 ---
 
-\newpage
+\let\thefootnote\relax\footnotetext{Code and reproducible workflow created by Blas M. Benito}
+
+\newpage 
+\tableofcontents 
+\newpage 
 
 # Summary
 
@@ -64,42 +76,24 @@ The **MOISCRUST** database contains volumetric water content (VWC, m³/m³) reco
 
 The **MOISCRUST** database and this reproducible notebook are distributed under the license [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by/4.0/legalcode).
 
+\newpage 
+
 # Reproducing this notebook
 
 This reproducible workflow is available as an interactive Rstudio notebook in the file **moiscrust.Rmd** stored in this repository. It is packaged with [renv](https://cran.r-project.org/package=renv) to facilitate reproducibility. That means that the R package versions originally used to run the notebook are already installed in the `renv` folder of the repository. To run it in your computer, execute the code chunk below to prepare the session. You will need to replace `eval = FALSE` with `eval = TRUE` in the header of the code chunk.
 
 ```{r, eval = FALSE}
 install.packages("renv")
-library(renv)
 renv::restore()
 ```
 
 # Data loading and preparation
 
-## Installing and loading the required libraries
+## Loading the required libraries
 
 The following R libraries are required to run this notebook.
 
 ```{r, eval = TRUE, message = FALSE, error = FALSE, warning = FALSE}
-#automatic install of packages if they are not readily available
-required_packages <- c(
-  "data.table",
-  "dplyr",
-  "magrittr",
-  "tidyr",
-  "ggplot2",
-  "kableExtra",
-  "foreach",
-  "doParallel",
-  "readr",
-  "writexl",
-  "RSQLite",
-  "zip",
-  "knitr",
-  "DBI"
-)
-
-#loading packages
 library("data.table")
 library("dplyr")
 library("magrittr")
@@ -114,9 +108,6 @@ library("RSQLite")
 library("zip")
 library("knitr")
 library("DBI")
-
-#removing objects
-rm(required_packages)
 ```
 
 ## Loading and preparing the raw data
@@ -256,6 +247,22 @@ kableExtra::kbl(
       )
     )
 ```
+
+## Replacing negative numbers with zeros
+
+The MOISCRUST database has several negative values falling within the margin of error of the sensors. To remove these anomalous values we set them to zero.
+
+```{r}
+moiscrust_long <- dplyr::mutate(
+  moiscrust_long,
+  soil_moisture = ifelse(
+    soil_moisture < 0,
+    0,
+    soil_moisture
+  )
+)
+```
+
 
 ## Visualization of the raw data
 
@@ -952,7 +959,7 @@ ggplot(moiscrust_long) +
 
 The file `data/daily_weather_aranjuez.csv` contains daily records of solar radiation (daily sum), temperature (maximum and minimum, in ºC), rainfall (daily sum, in mm.), and humidity (in percentage). To join this file with the `moiscrust` dataset, here we import it, aggregate `moiscrust` at daily resolution using only observations, and finally join both datasets by date.
 
-```{r}
+```{r, message = FALSE, error = FALSE, warning = FALSE}
 #importing the table
 weather <- data.table::fread("data/daily_weather_aranjuez.csv") %>%
   as.data.frame()
@@ -1126,7 +1133,7 @@ if(!file.exists("database.zip")){
   
   #save as SQLite
   db.driver <- DBI::dbDriver("SQLite")
-  db.connection <-  DBI::dbConnect(
+  db.connection <- DBI::dbConnect(
     db.driver, 
     dbname = "database/moiscrust.db"
     )
@@ -1156,8 +1163,6 @@ if(!file.exists("database.zip")){
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, error = FALSE}
 rm(
-  db.connection,
-  db.driver,
   best_predictor,
   moiscrust_interpolation_long,
   moiscrust_long,
@@ -1170,9 +1175,7 @@ rm(
   sensors_pairs_models,
   x_row,
   weather,
-  moiscrust_daily,
-  x,
-  y
+  moiscrust_daily
 )
 ```
 

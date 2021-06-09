@@ -1,0 +1,143 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
+\documentclass[
+  table]{article}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdfauthor={Joaquín Moreno1,; Sergio Asensio1; Miguel Berdugo1,2; Beatriz Gozalo1; Victoria Ochoa1; David Sánchez-Pescador3,4; Blas M. Benito1,; Fernando T. Maestre1,5},
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{fontspec}
+\setmainfont[Scale=1.1]{Montserrat}
+\setmonofont[Scale=1]{Montserrat}
+\linespread{1.5}
+\usepackage{listings}
+\lstset{breaklines=true}
+
+\usepackage{float}
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+\renewenvironment{figure}[1][2] {
+    \expandafter\origfigure\expandafter[H]
+} {
+    \endorigfigure
+}
+
+\floatplacement{figure}{H}
+
+\usepackage{pdflscape}
+\newcommand{\blandscape}{\begin{landscape}}
+\newcommand{\elandscape}{\end{landscape}}
+
+\usepackage{caption} 
+\captionsetup[table]{skip=10pt}
+\usepackage[tableposition=above]{caption}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Fourteen years\\
+of continuous soil moisture records\\
+from plant and biocrust-dominated microsites}
+\author{Joaquín Moreno\textsuperscript{1,$\mathsection{}$} \and Sergio Asensio\textsuperscript{1} \and Miguel Berdugo\textsuperscript{1,2} \and Beatriz Gozalo\textsuperscript{1} \and Victoria Ochoa\textsuperscript{1} \and David Sánchez-Pescador\textsuperscript{3,4} \and Blas M. Benito\textsuperscript{1,$\dagger{}$} \and Fernando T. Maestre\textsuperscript{1,5}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\textsuperscript{1} Instituto Multidisciplinar para el Estudio del Medio
+``Ramon Margalef'', Universidad de Alicante, Edificio Nuevos Institutos,
+Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
+Spain.\\
+\textsuperscript{2} Institut Department of Environmental Systems
+Science, ETH Zürich. Universitätstrasse 16, 8092 Zurich, Switzerland.\\
+\textsuperscript{3} Departamento de Farmacología, Farmacognosia y
+Botánica, Facultad de Farmacia, Universidad Complutense de Madrid,
+Madrid, Spain.\\
+\textsuperscript{4} Departamento de Biología y Geología, Física y
+Química Inorgánica, Escuela Superior de Ciencias Experimentales y
+Tecnológicas, Universidad Rey Juan Carlos, Calle Tulipán s/n, 28933
+Móstoles, Madrid, Spain.\\
+\textsuperscript{5} Departamento de Ecología, Universidad de Alicante,
+Carretera de San Vicente del Raspeig s/n, 03690 San Vicente del Raspeig,
+Alicante, Spain.
+
+\textsuperscript{$\mathsection{}$} Corresponding author:
+\href{mailto:joaquin.moreno@ua.es}{Joaquín Moreno
+\textless{}\href{mailto:joaquin.moreno@ua.es}{\nolinkurl{joaquin.moreno@ua.es}}\textgreater{}}
+
+\textsuperscript{$\dagger{}$} Code author:
+\href{mailto:blasbenito@gmail.com}{Blas M. Benito
+\textless{}\href{mailto:blasbenito@gmail.com}{\nolinkurl{blasbenito@gmail.com}}\textgreater{}}
+
+\let\thefootnote\relax\footnotetext{Code and reproducible workflow created by Blas M. Benito}
+
+\newpage 
+\tableofcontents
+
+\hypertarget{summary}{%
+\section{Summary}\label{summary}}
+
+\hypertarget{dos}{%
+\subsection{dos}\label{dos}}
+
+\end{document}
