@@ -1,0 +1,12 @@
+Te escribo porque ya hemos comenzado a trabajar en las revisiones del datapaper para Sci Data y hay algunos aspectos donde necesitamos tu ayuda para resolverlos (ya que tu controlas más del tema). Estos aspectos te los he indicado en globos de texto en el documento "Response reviewers". Además, también te envío un excel que está relacionado con la Figura 4 (y que creo que te será necesario para resolver aspectos del error estadístico a incluir en la Figura 4, que yo ando un poco perdido).
+
+A continuación te detallo a groso modo en qué aspectos necesitamos tu ayuda (aunque, por supuesto, siente libre de modificar o añadir más ideas a los comentario ya resueltos):
+
+1. Añadir las unidades de la radiación solar al material suplementario.
+2. Relación R2 y pendiente de línea de Fig 4.
+3. Añadir error de estimación en Fig 4.
+4. Argumentar 0.85 como aceptable.
+5. Modificar el material suplementario con NAN en caso de valores negativos reemplazados por cero.
+6. Desarrollar cómo se determinó el margen de error.
+
+Como te he dicho anteriormente, todo esto está mejor indicado en los globos de texto de "Response reviewers".

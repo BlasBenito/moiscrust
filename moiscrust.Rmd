@@ -110,6 +110,15 @@ library("knitr")
 library("DBI")
 ```
 
+## Value to replace negative values with
+
+Humidity sensors may drift over time, and yield negative values instead of zero. These negative values can be either be interpreted as malfunctions, or as zero humidity. The variable below is used to replace negative soil humidity values throughout this workflow. When set to `NA`, the variable `replace.negatives.with` represents sensor malfunctions. It should be set to `0` if negatives are interpreted as zero humidity.
+
+```{r}
+replace.negatives.with <- NA 
+```
+
+
 ## Loading and preparing the raw data
 
 The raw data, stored in the file *moiscrust_raw.csv* was compiled by the members of [Maestre Lab](https://maestrelab.com/en/) from the data provided by the soil moisture sensors.
@@ -248,16 +257,16 @@ kableExtra::kbl(
     )
 ```
 
-## Replacing negative numbers with zeros
+## Replacing negative numbers with `NA`
 
-The MOISCRUST database has several negative values falling within the margin of error of the sensors. To remove these anomalous values we set them to zero.
+The MOISCRUST database has several negative values, which are outside of the actual range of soil moisture the sensors can measure. To fix this issue and dismiss these values, we replace every negative values with `NA` (using the variable `replace.negatives.with` described at the beginning of this document).
 
 ```{r}
 moiscrust_long <- dplyr::mutate(
   moiscrust_long,
   soil_moisture = ifelse(
     soil_moisture < 0,
-    0,
+    replace.negatives.with,
     soil_moisture
   )
 )
@@ -285,7 +294,7 @@ ggplot(moiscrust_long) +
   theme_bw() + 
   scale_fill_viridis_c(
     direction = -1, 
-    na.value = "white", 
+    na.value = "gray50", 
     option = "B"
     ) + 
   theme(legend.position = "bottom") + 
@@ -349,7 +358,7 @@ kableExtra::kbl(moiscrust_NA) %>%
 
 # Imputation of missing data
 
-The imputation we apply to fill gaps in *MOISCRUST* works by finding, for a given entry $y$ with missing data at a time $t$, the sensor $x$ with data for $t$ that is in the same type of microsite (if possible), has the longest extent in common, and the highest correlation with the sensor to which $y$ belongs, and estimates $y$ with the linear model $y ~ x$.
+The imputation we apply to fill gaps in *MOISCRUST* works by finding, for a given entry $y$ with missing data at a time $t$, the sensor $x$ with data for $t$ that is in the same type of microsite (if possible), has the longest extent in common, and the highest correlation with the sensor to which $y$ belongs. Then, $y$ is estimated from the linear model $y ~ x$.
 
 ## Developing criteria to find candidates for gap filling
 
@@ -488,7 +497,7 @@ rm(
 )
 ```
 
-The resulting data frame, named **sensors_pairs**, has columns with the names of the sensor *y* (the one with missing data to impute), the sensor *x* (the candidate to be used as predictor to estimate *y*), their respective microsites, a column indicating if they belong to the same microsite, the percent of shared valid data, the R squared of their shared data, a 
+The resulting data frame, named **sensors_pairs**, has columns with the names of the sensor *y* (the one with missing data to impute), the sensor *x* (the candidate to be used as predictor to estimate *y*), their respective microsites, a column indicating if they belong to the same microsite, the percent of shared valid data, the R squared of their shared data, a model ID linking each entry with a model in `sensors_pairs_models`, and a selection score used to select the best possible model to use in the imputation process. 
 
 ```{r, eval = TRUE, echo = FALSE}
 #showing the table
@@ -566,7 +575,7 @@ kableExtra::kbl(head(x, 20)) %>%
     )
 ```
 
-And this is the **y** data frame, that will be filled during data imputation:
+This is the **y** data frame, that will be filled during the data imputation:
 
 ```{r, eval = TRUE, echo = FALSE}
 #showing the table
@@ -637,7 +646,7 @@ kableExtra::kbl(x[1, ]) %>%
     )
 ```
 
-**3.1.** If there is a valid value of soil moisture for the sensor "stipa5063", the algorithm goes to the next row, until there is a row with a missing value.
+**3.1.** If there is a valid value of soil moisture for the sensor "retama_2", the algorithm goes to the next row, until there is a row with a missing value.
 
 **4.** If there is a missing value (*NA*), the potential candidate predictors are selected from the row by removing the data of other sensors with *NA*, and the data of the target sensor.
 
@@ -699,13 +708,15 @@ predict(
   )$fit
 ```
 
+After this step, if any of these values is negative, then they are replaced with `replace.negatives.with`. And if `replace.negatives.with` is `NA` and `fit` is negative, then all three outcomes of predict are replaced with `NA`.
+
 **7.** The imputed value, its confidence intervals, and other values about the imputation quality available in **best_predictor** are transferred to the same row in the data frame **y**.
 
 **8.** Once all the sensors and rows have been processed this way, the matrix **y** is joined with **moiscrust_long**, and its interpolated values are transferred to the *soil_moisture* column, along with other columns indicating the quality of the interpolation.
 
 ## Applying the imputation algorithm to the complete dataset
 
-The code below applies the algorithm to every sensor and row with missing data. Sensors are processed in parallel to speed up the data imputation operation.
+The code below applies the algorithm explained above to every sensor and row with missing data. Sensors are processed in parallel to speed up the data imputation operation.
 
 ```{r, eval = TRUE}
 #setup for parallel execution
@@ -726,7 +737,7 @@ moiscrust_interpolation <- foreach::foreach(
     dplyr::filter(y == sensor_i)
   
   #fill microsite
-  y[, "microsite"] <-sensors_pair_i$y_microsite[1]
+  y[, "microsite"] <- sensors_pair_i$y_microsite[1]
   
   #scanning the rows of x one by one
   for(row_i in 1:nrow(x)){
@@ -754,17 +765,31 @@ moiscrust_interpolation <- foreach::foreach(
     if(nrow(best_predictor_i) == 0){next}
     
     #compute estimates with the model of the best predictor
-    y[row_i, c(
-      "model_estimate", 
-      "model_ci_lower", 
-      "model_ci_upper"
-      )] <- predict(
+    prediction <- predict(
         object = sensors_pairs_models[[best_predictor_i$model_id]],
         newdata = x_row_i,
         se.fit = TRUE,
         type = "response",
         interval = "confidence"
         )$fit
+    
+    #replacing negative values with 0
+    if(prediction[1] < 0){
+      prediction[1] <- 0
+    }
+    if(prediction[2] < 0){
+      prediction[2] <- 0
+    }
+    if(prediction[3] < 0){
+      prediction[3] <- 0
+    }
+    
+    #save prediction
+    y[row_i, c(
+      "model_estimate", 
+      "model_ci_lower", 
+      "model_ci_upper"
+      )] <- prediction
     
     #adding interpolation flag
     y[row_i, "interpolated"] <- TRUE
@@ -821,17 +846,13 @@ moiscrust_long$soil_moisture <- ifelse(
 )
 
 #adding a interpolation_quality flag following the criteria in the paper
-moiscrust_long$interpolation_quality <- ifelse(
-  moiscrust_long$sensors_r_squared > 0.85 &
-  moiscrust_long$sensors_shared_valid_percent > 20,
-  "acceptable",
-  "poor"
-)
+moiscrust_long$interpolation_quality <- moiscrust_long$sensors_r_squared
 
 #filling NA with "observation"
 moiscrust_long[
-  is.na(moiscrust_long$interpolation_quality), "interpolation_quality"
-  ] <- "observation"
+  is.na(moiscrust_long$interpolation_quality), 
+  "interpolation_quality"
+  ] <- 1
 
 #adding NA where there are no values
 moiscrust_long[is.na(moiscrust_long$soil_moisture), "interpolation_quality"] <- NA
@@ -857,7 +878,7 @@ moiscrust_NA <- moiscrust_long %>%
 rm(moiscrust_interpolation)
 ```
 
-The interpolation has removed all gaps where there was a value to interpolate from, as shown in the table below.
+The interpolation has removed all gaps where there was a reference value to interpolate from, as shown in the table below.
 
 ```{r, eval = TRUE, echo = FALSE}
 kableExtra::kbl(
@@ -904,7 +925,7 @@ ggplot(moiscrust_long) +
   theme_bw() + 
   scale_fill_viridis_c(
     direction = -1, 
-    na.value = "white", 
+    na.value = "gray50", 
     option = "B"
     ) +
   theme(legend.position = "top") + 
@@ -915,7 +936,7 @@ ggplot(moiscrust_long) +
   theme(legend.key.width = unit(0.8, "cm"))
 ```
 
-The plot above represents both observed and interpolated values, without a clear differentiation between each type. To provide an indicator of imputation quality, the imputation algorithm also generated a new column named *interpolation_quality*, where the observations are marked with the flag "observation", the imputed data where *x* and *y* shared more than 20% of valid cases and had an R² higher than 0.85 are marked with the flag "acceptable", and the imputed data below these thresholds are marked with the flag "poor". The plot below shows the values of these flags for each sensor and time, year per year.
+The plot above represents both observed and interpolated values. However, the imputation algorithm also generated a new column named *interpolation_quality*, where the observations are marked with the correlation coefficient of the model used to impute each value, as shown in the plot below, where the value `1` (color black) represents actual observations.
 
 ```{r, fig.width=12, fig.height=17, eval = TRUE, echo = TRUE}
 ggplot(moiscrust_long) + 
@@ -927,23 +948,14 @@ ggplot(moiscrust_long) +
   aes(
     x = year_day, 
     y = sensor, 
-    fill = factor(
-      interpolation_quality, 
-      levels = c(
-        "observation", 
-        "acceptable", 
-        "poor"
-        )
-      )
+    fill = interpolation_quality
     ) + 
   geom_tile() + 
   coord_cartesian(expand = FALSE) +
   theme_bw() + 
-  scale_fill_viridis_d(
+  scale_fill_viridis_c(
     direction = -1, 
-    begin = 0.1,
-    end = 0.8, 
-    na.value = "white", 
+    na.value = "gray50", 
     option = "B"
     ) +
   theme(legend.position = "top") + 
@@ -951,13 +963,13 @@ ggplot(moiscrust_long) +
   xlab("Day of the year") +
   ggtitle("MOISCRUST database (data quality)") +
   labs(
-    fill = expression("Data quality")) + 
+    fill = expression("imputation quality")) + 
   theme(legend.key.width = unit(1, "cm"))
 ```
 
 # Incorporating weather data at daily resolution
 
-The file `data/daily_weather_aranjuez.csv` contains daily records of solar radiation (daily sum), temperature (maximum and minimum, in ºC), rainfall (daily sum, in mm.), and humidity (in percentage). To join this file with the `moiscrust` dataset, here we import it, aggregate `moiscrust` at daily resolution using only observations, and finally join both datasets by date.
+The file `data/daily_weather_aranjuez.csv` contains daily records of solar radiation (daily sum, in $W/m^2$), temperature (maximum and minimum, in ºC), rainfall (daily sum, in mm.), and humidity (in percentage). To join this file with the `moiscrust` dataset, here we import it, aggregate `moiscrust` at daily resolution using only observations, and finally join both datasets by date.
 
 ```{r, message = FALSE, error = FALSE, warning = FALSE}
 #importing the table
@@ -991,20 +1003,14 @@ moiscrust_daily <- moiscrust_long %>%
     month_day = month_day[1],
     week = week[1],
     week_day = week_day[1],
+    microsite = microsite[1],
     soil_moisture_min = suppressWarnings(min(soil_moisture, na.rm = TRUE)),
     soil_moisture_mean = mean(soil_moisture, na.rm = TRUE),
     soil_moisture_max = suppressWarnings(max(soil_moisture, na.rm = TRUE)),
     interpolated = ifelse(sum(interpolated) > 0, TRUE, FALSE),
-    model_estimate = mean(model_estimate, na.rm = TRUE),
-    model_ci_lower = mean(model_ci_lower, na.rm = TRUE),
-    model_ci_upper = mean(model_ci_upper, na.rm = TRUE),
-    model_predictor = char_mode(model_predictor),
-    same_microsite = char_mode(same_microsite),
-    sensors_shared_valid_percent = mean(sensors_shared_valid_percent, na.rm = TRUE),
-    selection_score = mean(selection_score, na.rm = TRUE),
-    microsite = microsite[1],
-    interpolation_quality = char_mode(interpolation_quality)
   ) %>% 
+  dplyr::filter(interpolated == FALSE) %>% 
+  dplyr::select(-interpolated) %>% 
   as.data.frame()
 
 #NaN to NA
@@ -1018,15 +1024,9 @@ moiscrust_weather <- dplyr::left_join(
   moiscrust_daily,
   weather,
   by = "date"
-) %>% dplyr::filter(
-  interpolated == FALSE
 ) %>% 
   dplyr::select(
     -contains("model_"),
-    -same_microsite,
-    -sensors_shared_valid_percent,
-    -selection_score,
-    -interpolation_quality,
     -year.y,
     -month.y
     ) %>% 
@@ -1045,8 +1045,8 @@ moiscrust_weather <- dplyr::left_join(
     month_day,
     week,
     week_day,
-    microsite,
     sensor,
+    microsite,
     soil_moisture_min,
     soil_moisture_mean = round(soil_moisture_mean, 3),
     soil_moisture_max,
@@ -1059,19 +1059,42 @@ moiscrust_weather <- dplyr::left_join(
   na.omit()
 ```
 
-The resulting table, `moiscrust_weather`, has daily observations of soil humidity coupled with daily weather data, and no imputed data.
+The resulting table, `moiscrust_weather`, has daily observations of soil humidity (not imputed data) coupled with daily weather data.
 
 # Preparing database formats
 
 ## Format description
 
-The dataset **moiscrust_long** is the database in long format already. Below we rename it to **moiscrust**, and describe its columns.
+### `moiscrust`
+
+The dataset **moiscrust_long** is the MOISCRUST database in long format Below we rename it to **moiscrust**, reorder its columns, and describe its structure.
 
 ```{r}
-moiscrust <- moiscrust_long
+moiscrust <- moiscrust_long[ , c(
+  "date_time",
+  "date_time_id",
+  "date",
+  "time",
+  "year",
+  "year_day",
+  "month",
+  "week",
+  "week_day",
+  "sensor",
+  "microsite",
+  "soil_moisture",
+  "interpolated",
+  "interpolation_quality",
+  "model_ci_lower",
+  "model_ci_upper",
+  "model_predictor",
+  "same_microsite",
+  "sensors_shared_valid_percent",
+  "selection_score"
+)]
 ```
 
-The columns of the `moiscrust` table are:
+The columns of the `moiscrust` data frame are:
 
 -   *date_time*: date and time in POSIX format.
 -   *date_time_id*: integer, unique ID for each value of *date_time*.
@@ -1083,17 +1106,41 @@ The columns of the `moiscrust` table are:
 -   *week*: integer, week of the year.
 -   *week_day*: integer, day of the week.
 -   *sensor*: character, sensor name.
+-   *microsite*: character, name of the microsite.
 -   *soil_moisture*: numeric, soil moisture value in $m^{3} water /m^{3} soil$.
 -   *interpolated*: boolean, *TRUE* for interpolated records and *FALSE* for observations.
--   *model_estimate*: numeric, prediction of the linear model.
+-   *interpolation_quality*: numeric, r-squared of the model used to interpolate the soil moisture value.
 -   *model_ci_lower*: numeric, lower bound of the confidence interval of the estimate.
 -   *model_ci_upper*: numeric, upper bound of the confidence interval of the estimate.
 -   *model_predictor*: character, name of the sensor used as predictor in the linear model.
--   *same_microsite*: boolean, *TRUE* if the sensor and its predictor are in the same group ("stipa", "retama", "biocrust_low", "biocrust_medium", "biocrust_high").
--   *sensors_r_squared*: numeric, R squared between *sensor* and *model_predictor*.
+-   *same_microsite*: boolean, *TRUE* if the sensor and its predictor are in the same microsite group ("stipa", "retama", "biocrust_low", "biocrust_medium", "biocrust_high").
 -   *sensors_shared_valid_percent*: numeric, percentage of shared valid cases between *sensor* and *model_predictor*, taking the total number of values in *date_time_id* as reference.
 -   *selection_score*: numeric, value used to select the *model_predictor*, based on the sum of *same_microsite* (100 if *TRUE* and 0 if *FALSE*), *sensors_r_squared* multiplied by 100, and *sensors_shared_valid_percent*.
--   *interpolation_quality*: character, with the values "observation" for observations, "acceptable" for interpolated values where *sensors_r_squared* is higher than 0.85 and *sensors_shared_valid_percent* is higher than 20, and "poor" for interpolated values below at least one of these thresholds.
+
+
+### `moiscrust_weather`
+
+The `moiscrust_weather` data frame, at daily resolution, has the following columns:
+
+-   *date*: date in format year-month-day.
+-   *year*: integer, year.
+-   *year_day*: integer, day of the year.
+-   *season*: character, name of the season.
+-   *month*: integer, month number.
+-   *month_day*: integer, day of the month.
+-   *week*: integer, week of the year.
+-   *week_day*: integer, day of the week.
+-   *sensor*: character, sensor name.
+-   *microsite*: character, name of the microsite.
+-   *soil_moisture_min*: numeric, minimum soil moisture value for the given day.
+-   *soil_moisture_mean*: numeric, mean soil moisture for the given day.
+-   *soil_moisture_max*: numeric, maximum soil moisture registered for the given day.
+-   *solar_radiation_sum*: numeric, sum of daily solar radiation, in $W/m^2$.
+-   *temperature_max*: numeric, maximum daily temperature, in $ºC$.
+-   *temperature_min*: numeric, minimum daily temperature, in $ºC$.
+-   *rainfall_sum*: numeric, total daily rainfall, in $mm$.
+-   *humidity_average*: numeric, daily average humidity, in $%$.
+
 
 ## Saving the data base in different formats
 

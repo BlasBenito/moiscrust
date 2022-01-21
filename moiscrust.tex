@@ -248,6 +248,24 @@ The following R libraries are required to run this notebook.
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{value-to-replace-negative-values-with}{%
+\subsection{Value to replace negative values
+with}\label{value-to-replace-negative-values-with}}
+
+Humidity sensors may drift over time, and yield negative values instead
+of zero. These negative values can be either be interpreted as
+malfunctions, or as zero humidity. The variable below is used to replace
+negative soil humidity values throughout this workflow. When set to
+\texttt{NA}, the variable \texttt{replace.negatives.with} represents
+sensor malfunctions. It should be set to \texttt{0} if negatives are
+interpreted as zero humidity.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{replace.negatives.with }\OtherTok{\textless{}{-}} \ConstantTok{NA} 
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{loading-and-preparing-the-raw-data}{%
 \subsection{Loading and preparing the raw
 data}\label{loading-and-preparing-the-raw-data}}
@@ -450,13 +468,15 @@ date\_time & date\_time\_id & date & time & year & year\_day & month & month\_da
 \end{tabular}}
 \end{table}
 
-\hypertarget{replacing-negative-numbers-with-zeros}{%
-\subsection{Replacing negative numbers with
-zeros}\label{replacing-negative-numbers-with-zeros}}
+\hypertarget{replacing-negative-numbers-with-na}{%
+\subsection{\texorpdfstring{Replacing negative numbers with
+\texttt{NA}}{Replacing negative numbers with NA}}\label{replacing-negative-numbers-with-na}}
 
-The MOISCRUST database has several negative values falling within the
-margin of error of the sensors. To remove these anomalous values we set
-them to zero.
+The MOISCRUST database has several negative values, which are outside of
+the actual range of soil moisture the sensors can measure. To fix this
+issue and dismiss these values, we replace every negative values with
+\texttt{NA} (using the variable \texttt{replace.negatives.with}
+described at the beginning of this document).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -464,7 +484,7 @@ them to zero.
 \NormalTok{  moiscrust\_long,}
   \AttributeTok{soil\_moisture =} \FunctionTok{ifelse}\NormalTok{(}
 \NormalTok{    soil\_moisture }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{,}
-    \DecValTok{0}\NormalTok{,}
+\NormalTok{    replace.negatives.with,}
 \NormalTok{    soil\_moisture}
 \NormalTok{  )}
 \NormalTok{)}
@@ -497,7 +517,7 @@ the white color.
   \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+} 
   \FunctionTok{scale\_fill\_viridis\_c}\NormalTok{(}
     \AttributeTok{direction =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }
-    \AttributeTok{na.value =} \StringTok{"white"}\NormalTok{, }
+    \AttributeTok{na.value =} \StringTok{"gray50"}\NormalTok{, }
     \AttributeTok{option =} \StringTok{"B"}
 \NormalTok{    ) }\SpecialCharTok{+} 
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+} 
@@ -509,7 +529,7 @@ the white color.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-9-1.pdf}
 
 \hypertarget{number-of-na-per-sensor}{%
 \subsection{Number of NA per sensor}\label{number-of-na-per-sensor}}
@@ -564,35 +584,35 @@ sensor.
 \hline
 sensor & microsite & na\_count & na\_count\_percent\\
 \hline
-biocrust\_high\_1 & biocrust\_high & 7674 & 16.5\\
+stipa\_3 & stipa & 13963 & 30.0\\
 \hline
-stipa\_1 & stipa & 10553 & 22.7\\
+bare\_soil\_1 & bare\_soil & 18442 & 39.6\\
 \hline
-bare\_soil\_1 & bare\_soil & 10987 & 23.6\\
+biocrust\_high\_2 & biocrust\_high & 18813 & 40.4\\
 \hline
-bare\_soil\_3 & bare\_soil & 11114 & 23.9\\
+stipa\_1 & stipa & 20840 & 44.8\\
 \hline
-bare\_soil\_2 & bare\_soil & 11188 & 24.1\\
+biocrust\_high\_1 & biocrust\_high & 22940 & 49.3\\
 \hline
-biocrust\_high\_2 & biocrust\_high & 11776 & 25.3\\
+retama\_3 & retama & 24007 & 51.6\\
 \hline
-biocrust\_high\_3 & biocrust\_high & 14125 & 30.4\\
+biocrust\_high\_3 & biocrust\_high & 24225 & 52.1\\
 \hline
-stipa\_2 & stipa & 15363 & 33.0\\
+biocrust\_medium\_1 & biocrust\_medium & 25797 & 55.5\\
 \hline
-stipa\_3 & stipa & 15604 & 33.5\\
+bare\_soil\_2 & bare\_soil & 27546 & 59.2\\
 \hline
-biocrust\_medium\_1 & biocrust\_medium & 16934 & 36.4\\
+stipa\_2 & stipa & 27698 & 59.5\\
 \hline
-biocrust\_medium\_2 & biocrust\_medium & 18743 & 40.3\\
+biocrust\_medium\_2 & biocrust\_medium & 29532 & 63.5\\
 \hline
-retama\_3 & retama & 20505 & 44.1\\
+retama\_1 & retama & 30111 & 64.7\\
 \hline
-retama\_1 & retama & 22840 & 49.1\\
+biocrust\_medium\_3 & biocrust\_medium & 30596 & 65.8\\
 \hline
-retama\_2 & retama & 22999 & 49.4\\
+retama\_2 & retama & 31366 & 67.4\\
 \hline
-biocrust\_medium\_3 & biocrust\_medium & 31225 & 67.1\\
+bare\_soil\_3 & bare\_soil & 34707 & 74.6\\
 \hline
 \end{tabular}
 \end{table}
@@ -604,8 +624,8 @@ The imputation we apply to fill gaps in \emph{MOISCRUST} works by
 finding, for a given entry \(y\) with missing data at a time \(t\), the
 sensor \(x\) with data for \(t\) that is in the same type of microsite
 (if possible), has the longest extent in common, and the highest
-correlation with the sensor to which \(y\) belongs, and estimates \(y\)
-with the linear model \(y ~ x\).
+correlation with the sensor to which \(y\) belongs. Then, \(y\) is
+estimated from the linear model \(y ~ x\).
 
 \hypertarget{developing-criteria-to-find-candidates-for-gap-filling}{%
 \subsection{Developing criteria to find candidates for gap
@@ -777,7 +797,9 @@ with the names of the sensor \emph{y} (the one with missing data to
 impute), the sensor \emph{x} (the candidate to be used as predictor to
 estimate \emph{y}), their respective microsites, a column indicating if
 they belong to the same microsite, the percent of shared valid data, the
-R squared of their shared data, a
+R squared of their shared data, a model ID linking each entry with a
+model in \texttt{sensors\_pairs\_models}, and a selection score used to
+select the best possible model to use in the imputation process.
 
 \begin{table}[H]
 \centering
@@ -786,45 +808,45 @@ R squared of their shared data, a
 \hline
 y & x & y\_microsite & x\_microsite & same\_microsite & sensors\_shared\_valid\_percent & sensors\_r\_squared & model\_id & selection\_score\\
 \hline
-retama\_1 & retama\_2 & retama & retama & TRUE & 20.503945 & 0.8825786 & 1 & 208.76181\\
+retama\_1 & retama\_2 & retama & retama & TRUE & 19.49132 & 0.8875375 & 1 & 208.2451\\
 \hline
-retama\_1 & retama\_3 & retama & retama & TRUE & 28.736052 & 0.9065618 & 2 & 219.39223\\
+retama\_1 & retama\_3 & retama & retama & TRUE & 32.26840 & 0.9050852 & 2 & 222.7769\\
 \hline
-retama\_1 & stipa\_1 & retama & stipa & FALSE & 49.437792 & 0.6546707 & 3 & 114.90486\\
+retama\_1 & stipa\_1 & retama & stipa & FALSE & 49.39264 & 0.8768781 & 3 & 137.0805\\
 \hline
-retama\_1 & stipa\_2 & retama & stipa & FALSE & 34.751575 & 0.6570769 & 4 & 100.45926\\
+retama\_1 & stipa\_2 & retama & stipa & FALSE & 30.86449 & 0.8693809 & 4 & 117.8026\\
 \hline
-retama\_1 & stipa\_3 & retama & stipa & FALSE & 27.985724 & 0.8494829 & 5 & 112.93401\\
+retama\_1 & stipa\_3 & retama & stipa & FALSE & 32.64464 & 0.9077454 & 5 & 123.4192\\
 \hline
-retama\_1 & bare\_soil\_1 & retama & bare\_soil & FALSE & 45.825898 & 0.8610431 & 6 & 131.93021\\
+retama\_1 & bare\_soil\_1 & retama & bare\_soil & FALSE & 49.00995 & 0.8918511 & 6 & 138.1951\\
 \hline
-retama\_1 & bare\_soil\_2 & retama & bare\_soil & FALSE & 39.137445 & 0.6276224 & 7 & 101.89968\\
+retama\_1 & bare\_soil\_2 & retama & bare\_soil & FALSE & 40.65960 & 0.7716887 & 7 & 117.8285\\
 \hline
-retama\_1 & bare\_soil\_3 & retama & bare\_soil & FALSE & 34.364586 & 0.8118848 & 8 & 115.55307\\
+retama\_1 & bare\_soil\_3 & retama & bare\_soil & FALSE & 12.33204 & 0.8942298 & 8 & 101.7550\\
 \hline
-retama\_1 & biocrust\_medium\_1 & retama & biocrust\_medium & FALSE & 44.099499 & 0.8808309 & 9 & 132.18258\\
+retama\_1 & biocrust\_medium\_1 & retama & biocrust\_medium & FALSE & 45.66465 & 0.9131358 & 9 & 136.9782\\
 \hline
-retama\_1 & biocrust\_medium\_2 & retama & biocrust\_medium & FALSE & 31.105282 & 0.7429876 & 10 & 105.40404\\
+retama\_1 & biocrust\_medium\_2 & retama & biocrust\_medium & FALSE & 35.28691 & 0.7624165 & 10 & 111.5286\\
 \hline
-retama\_1 & biocrust\_medium\_3 & retama & biocrust\_medium & FALSE & 5.892976 & 0.8384753 & 11 & 89.74050\\
+retama\_1 & biocrust\_medium\_3 & retama & biocrust\_medium & FALSE & 21.96805 & 0.8633835 & 11 & 108.3064\\
 \hline
-retama\_1 & biocrust\_high\_1 & retama & biocrust\_high & FALSE & 48.414422 & 0.7630192 & 12 & 124.71634\\
+retama\_1 & biocrust\_high\_1 & retama & biocrust\_high & FALSE & 48.26823 & 0.8719324 & 12 & 135.4615\\
 \hline
-retama\_1 & biocrust\_high\_2 & retama & biocrust\_high & FALSE & 38.305420 & 0.7500951 & 13 & 113.31493\\
+retama\_1 & biocrust\_high\_2 & retama & biocrust\_high & FALSE & 43.13633 & 0.8749174 & 13 & 130.6281\\
 \hline
-retama\_1 & biocrust\_high\_3 & retama & biocrust\_high & FALSE & 32.943478 & 0.8490180 & 14 & 117.84528\\
+retama\_1 & biocrust\_high\_3 & retama & biocrust\_high & FALSE & 35.61585 & 0.9401687 & 14 & 129.6327\\
 \hline
-retama\_2 & retama\_3 & retama & retama & TRUE & 32.057704 & 0.8394976 & 15 & 216.00746\\
+retama\_2 & retama\_3 & retama & retama & TRUE & 35.53845 & 0.8520638 & 15 & 220.7448\\
 \hline
-retama\_2 & stipa\_1 & retama & stipa & FALSE & 42.633242 & 0.7653060 & 16 & 119.16384\\
+retama\_2 & stipa\_1 & retama & stipa & FALSE & 38.00658 & 0.7677740 & 16 & 114.7840\\
 \hline
-retama\_2 & stipa\_2 & retama & stipa & FALSE & 37.522843 & 0.5339814 & 17 & 90.92099\\
+retama\_2 & stipa\_2 & retama & stipa & FALSE & 38.66016 & 0.8345871 & 17 & 122.1189\\
 \hline
-retama\_2 & stipa\_3 & retama & stipa & FALSE & 31.636317 & 0.8561540 & 18 & 117.25171\\
+retama\_2 & stipa\_3 & retama & stipa & FALSE & 32.43824 & 0.8913270 & 18 & 121.5709\\
 \hline
-retama\_2 & bare\_soil\_1 & retama & bare\_soil & FALSE & 43.684561 & 0.7455036 & 19 & 118.23492\\
+retama\_2 & bare\_soil\_1 & retama & bare\_soil & FALSE & 44.80683 & 0.7984693 & 19 & 124.6538\\
 \hline
-retama\_2 & bare\_soil\_2 & retama & bare\_soil & FALSE & 48.896008 & 0.6940089 & 20 & 118.29689\\
+retama\_2 & bare\_soil\_2 & retama & bare\_soil & FALSE & 45.83235 & 0.7608700 & 20 & 121.9193\\
 \hline
 \end{tabular}}
 \end{table}
@@ -926,7 +948,7 @@ retama\_1 & retama\_2 & retama\_3 & stipa\_1 & stipa\_2 & stipa\_3 & bare\_soil\
 \end{tabular}}
 \end{table}
 
-And this is the \textbf{y} data frame, that will be filled during data
+This is the \textbf{y} data frame, that will be filled during the data
 imputation:
 
 \begin{table}[H]
@@ -1012,33 +1034,33 @@ imputed) are selected.
 \hline
 y & x & y\_microsite & x\_microsite & same\_microsite & sensors\_shared\_valid\_percent & sensors\_r\_squared & model\_id & selection\_score\\
 \hline
-retama\_2 & retama\_3 & retama & retama & TRUE & 32.05770 & 0.8394976 & 15 & 216.00746\\
+retama\_2 & retama\_3 & retama & retama & TRUE & 35.53845 & 0.8520638 & 15 & 220.7448\\
 \hline
-retama\_2 & stipa\_1 & retama & stipa & FALSE & 42.63324 & 0.7653060 & 16 & 119.16384\\
+retama\_2 & stipa\_1 & retama & stipa & FALSE & 38.00658 & 0.7677740 & 16 & 114.7840\\
 \hline
-retama\_2 & stipa\_2 & retama & stipa & FALSE & 37.52284 & 0.5339814 & 17 & 90.92099\\
+retama\_2 & stipa\_2 & retama & stipa & FALSE & 38.66016 & 0.8345871 & 17 & 122.1189\\
 \hline
-retama\_2 & stipa\_3 & retama & stipa & FALSE & 31.63632 & 0.8561540 & 18 & 117.25171\\
+retama\_2 & stipa\_3 & retama & stipa & FALSE & 32.43824 & 0.8913270 & 18 & 121.5709\\
 \hline
-retama\_2 & bare\_soil\_1 & retama & bare\_soil & FALSE & 43.68456 & 0.7455036 & 19 & 118.23492\\
+retama\_2 & bare\_soil\_1 & retama & bare\_soil & FALSE & 44.80683 & 0.7984693 & 19 & 124.6538\\
 \hline
-retama\_2 & bare\_soil\_2 & retama & bare\_soil & FALSE & 48.89601 & 0.6940089 & 20 & 118.29689\\
+retama\_2 & bare\_soil\_2 & retama & bare\_soil & FALSE & 45.83235 & 0.7608700 & 20 & 121.9193\\
 \hline
-retama\_2 & bare\_soil\_3 & retama & bare\_soil & FALSE & 37.40030 & 0.7494452 & 21 & 112.34481\\
+retama\_2 & bare\_soil\_3 & retama & bare\_soil & FALSE & 29.17034 & 0.8402989 & 21 & 113.2002\\
 \hline
-retama\_2 & biocrust\_medium\_1 & retama & biocrust\_medium & FALSE & 30.22811 & 0.7692882 & 22 & 107.15692\\
+retama\_2 & biocrust\_medium\_1 & retama & biocrust\_medium & FALSE & 31.35038 & 0.7975457 & 22 & 111.1049\\
 \hline
-retama\_2 & biocrust\_medium\_2 & retama & biocrust\_medium & FALSE & 37.38525 & 0.7255941 & 23 & 109.94466\\
+retama\_2 & biocrust\_medium\_2 & retama & biocrust\_medium & FALSE & 33.47666 & 0.7376920 & 23 & 107.2459\\
 \hline
-retama\_2 & biocrust\_medium\_3 & retama & biocrust\_medium & FALSE & 26.50872 & 0.8334687 & 24 & 109.85559\\
+retama\_2 & biocrust\_medium\_3 & retama & biocrust\_medium & FALSE & 27.62454 & 0.8515719 & 24 & 112.7817\\
 \hline
-retama\_2 & biocrust\_high\_1 & retama & biocrust\_high & FALSE & 47.95649 & 0.6954543 & 25 & 117.50191\\
+retama\_2 & biocrust\_high\_1 & retama & biocrust\_high & FALSE & 45.04762 & 0.7545435 & 25 & 120.5020\\
 \hline
-retama\_2 & biocrust\_high\_2 & retama & biocrust\_high & FALSE & 47.88339 & 0.8146773 & 26 & 129.35112\\
+retama\_2 & biocrust\_high\_2 & retama & biocrust\_high & FALSE & 45.04977 & 0.8237431 & 26 & 127.4241\\
 \hline
-retama\_2 & biocrust\_high\_3 & retama & biocrust\_high & FALSE & 33.64221 & 0.8001904 & 27 & 113.66124\\
+retama\_2 & biocrust\_high\_3 & retama & biocrust\_high & FALSE & 31.08808 & 0.8414304 & 27 & 115.2311\\
 \hline
-retama\_2 & retama\_1 & retama & retama & TRUE & 20.50395 & 0.8825786 & 106 & 208.76181\\
+retama\_2 & retama\_1 & retama & retama & TRUE & 19.49132 & 0.8875375 & 106 & 208.2451\\
 \hline
 \end{tabular}}
 \end{table}
@@ -1064,7 +1086,7 @@ retama\_1 & retama\_2 & retama\_3 & stipa\_1 & stipa\_2 & stipa\_3 & bare\_soil\
 \end{table}
 
 \textbf{3.1.} If there is a valid value of soil moisture for the sensor
-``stipa5063'', the algorithm goes to the next row, until there is a row
+``retama\_2'', the algorithm goes to the next row, until there is a row
 with a missing value.
 
 \textbf{4.} If there is a missing value (\emph{NA}), the potential
@@ -1112,7 +1134,7 @@ in the step \textbf{2.}.
 \hline
 y & x & y\_microsite & x\_microsite & same\_microsite & sensors\_shared\_valid\_percent & sensors\_r\_squared & model\_id & selection\_score\\
 \hline
-retama\_2 & retama\_1 & retama & retama & TRUE & 20.50395 & 0.8825786 & 106 & 208.7618\\
+retama\_2 & retama\_1 & retama & retama & TRUE & 19.49132 & 0.8875375 & 106 & 208.2451\\
 \hline
 \end{tabular}}
 \end{table}
@@ -1135,9 +1157,15 @@ for the empty cell.
 \end{Shaded}
 
 \begin{verbatim}
-##         fit       lwr       upr
-## 1 0.2442059 0.2422496 0.2461622
+##       fit       lwr       upr
+## 1 0.24973 0.2477106 0.2517494
 \end{verbatim}
+
+After this step, if any of these values is negative, then they are
+replaced with \texttt{replace.negatives.with}. And if
+\texttt{replace.negatives.with} is \texttt{NA} and \texttt{fit} is
+negative, then all three outcomes of predict are replaced with
+\texttt{NA}.
 
 \textbf{7.} The imputed value, its confidence intervals, and other
 values about the imputation quality available in
@@ -1153,9 +1181,9 @@ along with other columns indicating the quality of the interpolation.
 \subsection{Applying the imputation algorithm to the complete
 dataset}\label{applying-the-imputation-algorithm-to-the-complete-dataset}}
 
-The code below applies the algorithm to every sensor and row with
-missing data. Sensors are processed in parallel to speed up the data
-imputation operation.
+The code below applies the algorithm explained above to every sensor and
+row with missing data. Sensors are processed in parallel to speed up the
+data imputation operation.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1177,7 +1205,7 @@ imputation operation.
 \NormalTok{    dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(y }\SpecialCharTok{==}\NormalTok{ sensor\_i)}
   
   \CommentTok{\#fill microsite}
-\NormalTok{  y[, }\StringTok{"microsite"}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{sensors\_pair\_i}\SpecialCharTok{$}\NormalTok{y\_microsite[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  y[, }\StringTok{"microsite"}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ sensors\_pair\_i}\SpecialCharTok{$}\NormalTok{y\_microsite[}\DecValTok{1}\NormalTok{]}
   
   \CommentTok{\#scanning the rows of x one by one}
   \ControlFlowTok{for}\NormalTok{(row\_i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(x))\{}
@@ -1205,17 +1233,31 @@ imputation operation.
     \ControlFlowTok{if}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(best\_predictor\_i) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{)\{}\ControlFlowTok{next}\NormalTok{\}}
     
     \CommentTok{\#compute estimates with the model of the best predictor}
-\NormalTok{    y[row\_i, }\FunctionTok{c}\NormalTok{(}
-      \StringTok{"model\_estimate"}\NormalTok{, }
-      \StringTok{"model\_ci\_lower"}\NormalTok{, }
-      \StringTok{"model\_ci\_upper"}
-\NormalTok{      )] }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(}
+\NormalTok{    prediction }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(}
         \AttributeTok{object =}\NormalTok{ sensors\_pairs\_models[[best\_predictor\_i}\SpecialCharTok{$}\NormalTok{model\_id]],}
         \AttributeTok{newdata =}\NormalTok{ x\_row\_i,}
         \AttributeTok{se.fit =} \ConstantTok{TRUE}\NormalTok{,}
         \AttributeTok{type =} \StringTok{"response"}\NormalTok{,}
         \AttributeTok{interval =} \StringTok{"confidence"}
 \NormalTok{        )}\SpecialCharTok{$}\NormalTok{fit}
+    
+    \CommentTok{\#replacing negative values with 0}
+    \ControlFlowTok{if}\NormalTok{(prediction[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{)\{}
+\NormalTok{      prediction[}\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    \}}
+    \ControlFlowTok{if}\NormalTok{(prediction[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{)\{}
+\NormalTok{      prediction[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    \}}
+    \ControlFlowTok{if}\NormalTok{(prediction[}\DecValTok{3}\NormalTok{] }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{)\{}
+\NormalTok{      prediction[}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    \}}
+    
+    \CommentTok{\#save prediction}
+\NormalTok{    y[row\_i, }\FunctionTok{c}\NormalTok{(}
+      \StringTok{"model\_estimate"}\NormalTok{, }
+      \StringTok{"model\_ci\_lower"}\NormalTok{, }
+      \StringTok{"model\_ci\_upper"}
+\NormalTok{      )] }\OtherTok{\textless{}{-}}\NormalTok{ prediction}
     
     \CommentTok{\#adding interpolation flag}
 \NormalTok{    y[row\_i, }\StringTok{"interpolated"}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{TRUE}
@@ -1279,17 +1321,13 @@ we transform this object into the data frame
 \NormalTok{)}
 
 \CommentTok{\#adding a interpolation\_quality flag following the criteria in the paper}
-\NormalTok{moiscrust\_long}\SpecialCharTok{$}\NormalTok{interpolation\_quality }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}
-\NormalTok{  moiscrust\_long}\SpecialCharTok{$}\NormalTok{sensors\_r\_squared }\SpecialCharTok{\textgreater{}} \FloatTok{0.85} \SpecialCharTok{\&}
-\NormalTok{  moiscrust\_long}\SpecialCharTok{$}\NormalTok{sensors\_shared\_valid\_percent }\SpecialCharTok{\textgreater{}} \DecValTok{20}\NormalTok{,}
-  \StringTok{"acceptable"}\NormalTok{,}
-  \StringTok{"poor"}
-\NormalTok{)}
+\NormalTok{moiscrust\_long}\SpecialCharTok{$}\NormalTok{interpolation\_quality }\OtherTok{\textless{}{-}}\NormalTok{ moiscrust\_long}\SpecialCharTok{$}\NormalTok{sensors\_r\_squared}
 
 \CommentTok{\#filling NA with "observation"}
 \NormalTok{moiscrust\_long[}
-  \FunctionTok{is.na}\NormalTok{(moiscrust\_long}\SpecialCharTok{$}\NormalTok{interpolation\_quality), }\StringTok{"interpolation\_quality"}
-\NormalTok{  ] }\OtherTok{\textless{}{-}} \StringTok{"observation"}
+  \FunctionTok{is.na}\NormalTok{(moiscrust\_long}\SpecialCharTok{$}\NormalTok{interpolation\_quality), }
+  \StringTok{"interpolation\_quality"}
+\NormalTok{  ] }\OtherTok{\textless{}{-}} \DecValTok{1}
 
 \CommentTok{\#adding NA where there are no values}
 \NormalTok{moiscrust\_long[}\FunctionTok{is.na}\NormalTok{(moiscrust\_long}\SpecialCharTok{$}\NormalTok{soil\_moisture), }\StringTok{"interpolation\_quality"}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{NA}
@@ -1316,8 +1354,8 @@ we transform this object into the data frame
 \end{Highlighting}
 \end{Shaded}
 
-The interpolation has removed all gaps where there was a value to
-interpolate from, as shown in the table below.
+The interpolation has removed all gaps where there was a reference value
+to interpolate from, as shown in the table below.
 
 \begin{table}[H]
 \centering
@@ -1326,35 +1364,35 @@ interpolate from, as shown in the table below.
 \hline
 Sensor & NA before interpolation & NA after interpolation & NA \% before interpolation & NA \% after interpolation\\
 \hline
-bare\_soil\_1 & 10987 & 989 & 23.6 & 2.1\\
+bare\_soil\_1 & 18442 & 11338 & 39.6 & 24.4\\
 \hline
-bare\_soil\_2 & 11188 & 989 & 24.1 & 2.1\\
+bare\_soil\_2 & 27546 & 16872 & 59.2 & 36.3\\
 \hline
-bare\_soil\_3 & 11114 & 989 & 23.9 & 2.1\\
+bare\_soil\_3 & 34707 & 4191 & 74.6 & 9.0\\
 \hline
-biocrust\_high\_1 & 7674 & 989 & 16.5 & 2.1\\
+biocrust\_high\_1 & 22940 & 12442 & 49.3 & 26.7\\
 \hline
-biocrust\_high\_2 & 11776 & 989 & 25.3 & 2.1\\
+biocrust\_high\_2 & 18813 & 6558 & 40.4 & 14.1\\
 \hline
-biocrust\_high\_3 & 14125 & 989 & 30.4 & 2.1\\
+biocrust\_high\_3 & 24225 & 5640 & 52.1 & 12.1\\
 \hline
-biocrust\_medium\_1 & 16934 & 989 & 36.4 & 2.1\\
+biocrust\_medium\_1 & 25797 & 7906 & 55.5 & 17.0\\
 \hline
-biocrust\_medium\_2 & 18743 & 989 & 40.3 & 2.1\\
+biocrust\_medium\_2 & 29532 & 9232 & 63.5 & 19.8\\
 \hline
-biocrust\_medium\_3 & 31225 & 989 & 67.1 & 2.1\\
+biocrust\_medium\_3 & 30596 & 5509 & 65.8 & 11.8\\
 \hline
-retama\_1 & 22840 & 989 & 49.1 & 2.1\\
+retama\_1 & 30111 & 8967 & 64.7 & 19.3\\
 \hline
-retama\_2 & 22999 & 989 & 49.4 & 2.1\\
+retama\_2 & 31366 & 7529 & 67.4 & 16.2\\
 \hline
-retama\_3 & 20505 & 989 & 44.1 & 2.1\\
+retama\_3 & 24007 & 12216 & 51.6 & 26.3\\
 \hline
-stipa\_1 & 10553 & 989 & 22.7 & 2.1\\
+stipa\_1 & 20840 & 10547 & 44.8 & 22.7\\
 \hline
-stipa\_2 & 15363 & 989 & 33.0 & 2.1\\
+stipa\_2 & 27698 & 12885 & 59.5 & 27.7\\
 \hline
-stipa\_3 & 15604 & 989 & 33.5 & 2.1\\
+stipa\_3 & 13963 & 2049 & 30.0 & 4.4\\
 \hline
 \end{tabular}}
 \end{table}
@@ -1384,7 +1422,7 @@ imputation algorithm.
   \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+} 
   \FunctionTok{scale\_fill\_viridis\_c}\NormalTok{(}
     \AttributeTok{direction =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }
-    \AttributeTok{na.value =} \StringTok{"white"}\NormalTok{, }
+    \AttributeTok{na.value =} \StringTok{"gray50"}\NormalTok{, }
     \AttributeTok{option =} \StringTok{"B"}
 \NormalTok{    ) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{) }\SpecialCharTok{+} 
@@ -1396,17 +1434,14 @@ imputation algorithm.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-29-1.pdf}
+\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf}
 
-The plot above represents both observed and interpolated values, without
-a clear differentiation between each type. To provide an indicator of
-imputation quality, the imputation algorithm also generated a new column
-named \emph{interpolation\_quality}, where the observations are marked
-with the flag ``observation'', the imputed data where \emph{x} and
-\emph{y} shared more than 20\% of valid cases and had an R² higher than
-0.85 are marked with the flag ``acceptable'', and the imputed data below
-these thresholds are marked with the flag ``poor''. The plot below shows
-the values of these flags for each sensor and time, year per year.
+The plot above represents both observed and interpolated values.
+However, the imputation algorithm also generated a new column named
+\emph{interpolation\_quality}, where the observations are marked with
+the correlation coefficient of the model used to impute each value, as
+shown in the plot below, where the value \texttt{1} (color black)
+represents actual observations.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1419,23 +1454,14 @@ the values of these flags for each sensor and time, year per year.
   \FunctionTok{aes}\NormalTok{(}
     \AttributeTok{x =}\NormalTok{ year\_day, }
     \AttributeTok{y =}\NormalTok{ sensor, }
-    \AttributeTok{fill =} \FunctionTok{factor}\NormalTok{(}
-\NormalTok{      interpolation\_quality, }
-      \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}
-        \StringTok{"observation"}\NormalTok{, }
-        \StringTok{"acceptable"}\NormalTok{, }
-        \StringTok{"poor"}
-\NormalTok{        )}
-\NormalTok{      )}
+    \AttributeTok{fill =}\NormalTok{ interpolation\_quality}
 \NormalTok{    ) }\SpecialCharTok{+} 
   \FunctionTok{geom\_tile}\NormalTok{() }\SpecialCharTok{+} 
   \FunctionTok{coord\_cartesian}\NormalTok{(}\AttributeTok{expand =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+} 
-  \FunctionTok{scale\_fill\_viridis\_d}\NormalTok{(}
+  \FunctionTok{scale\_fill\_viridis\_c}\NormalTok{(}
     \AttributeTok{direction =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }
-    \AttributeTok{begin =} \FloatTok{0.1}\NormalTok{,}
-    \AttributeTok{end =} \FloatTok{0.8}\NormalTok{, }
-    \AttributeTok{na.value =} \StringTok{"white"}\NormalTok{, }
+    \AttributeTok{na.value =} \StringTok{"gray50"}\NormalTok{, }
     \AttributeTok{option =} \StringTok{"B"}
 \NormalTok{    ) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{) }\SpecialCharTok{+} 
@@ -1443,23 +1469,23 @@ the values of these flags for each sensor and time, year per year.
   \FunctionTok{xlab}\NormalTok{(}\StringTok{"Day of the year"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"MOISCRUST database (data quality)"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{labs}\NormalTok{(}
-    \AttributeTok{fill =} \FunctionTok{expression}\NormalTok{(}\StringTok{"Data quality"}\NormalTok{)) }\SpecialCharTok{+} 
+    \AttributeTok{fill =} \FunctionTok{expression}\NormalTok{(}\StringTok{"imputation quality"}\NormalTok{)) }\SpecialCharTok{+} 
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.key.width =} \FunctionTok{unit}\NormalTok{(}\DecValTok{1}\NormalTok{, }\StringTok{"cm"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-30-1.pdf}
+\includegraphics{moiscrust_files/figure-latex/unnamed-chunk-31-1.pdf}
 
 \hypertarget{incorporating-weather-data-at-daily-resolution}{%
 \section{Incorporating weather data at daily
 resolution}\label{incorporating-weather-data-at-daily-resolution}}
 
 The file \texttt{data/daily\_weather\_aranjuez.csv} contains daily
-records of solar radiation (daily sum), temperature (maximum and
-minimum, in ºC), rainfall (daily sum, in mm.), and humidity (in
-percentage). To join this file with the \texttt{moiscrust} dataset, here
-we import it, aggregate \texttt{moiscrust} at daily resolution using
-only observations, and finally join both datasets by date.
+records of solar radiation (daily sum, in \(W/m^2\)), temperature
+(maximum and minimum, in ºC), rainfall (daily sum, in mm.), and humidity
+(in percentage). To join this file with the \texttt{moiscrust} dataset,
+here we import it, aggregate \texttt{moiscrust} at daily resolution
+using only observations, and finally join both datasets by date.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1494,20 +1520,14 @@ only observations, and finally join both datasets by date.
     \AttributeTok{month\_day =}\NormalTok{ month\_day[}\DecValTok{1}\NormalTok{],}
     \AttributeTok{week =}\NormalTok{ week[}\DecValTok{1}\NormalTok{],}
     \AttributeTok{week\_day =}\NormalTok{ week\_day[}\DecValTok{1}\NormalTok{],}
+    \AttributeTok{microsite =}\NormalTok{ microsite[}\DecValTok{1}\NormalTok{],}
     \AttributeTok{soil\_moisture\_min =} \FunctionTok{suppressWarnings}\NormalTok{(}\FunctionTok{min}\NormalTok{(soil\_moisture, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)),}
     \AttributeTok{soil\_moisture\_mean =} \FunctionTok{mean}\NormalTok{(soil\_moisture, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
     \AttributeTok{soil\_moisture\_max =} \FunctionTok{suppressWarnings}\NormalTok{(}\FunctionTok{max}\NormalTok{(soil\_moisture, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)),}
     \AttributeTok{interpolated =} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{sum}\NormalTok{(interpolated) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{),}
-    \AttributeTok{model\_estimate =} \FunctionTok{mean}\NormalTok{(model\_estimate, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-    \AttributeTok{model\_ci\_lower =} \FunctionTok{mean}\NormalTok{(model\_ci\_lower, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-    \AttributeTok{model\_ci\_upper =} \FunctionTok{mean}\NormalTok{(model\_ci\_upper, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-    \AttributeTok{model\_predictor =} \FunctionTok{char\_mode}\NormalTok{(model\_predictor),}
-    \AttributeTok{same\_microsite =} \FunctionTok{char\_mode}\NormalTok{(same\_microsite),}
-    \AttributeTok{sensors\_shared\_valid\_percent =} \FunctionTok{mean}\NormalTok{(sensors\_shared\_valid\_percent, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-    \AttributeTok{selection\_score =} \FunctionTok{mean}\NormalTok{(selection\_score, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-    \AttributeTok{microsite =}\NormalTok{ microsite[}\DecValTok{1}\NormalTok{],}
-    \AttributeTok{interpolation\_quality =} \FunctionTok{char\_mode}\NormalTok{(interpolation\_quality)}
 \NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(interpolated }\SpecialCharTok{==} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{interpolated) }\SpecialCharTok{\%\textgreater{}\%} 
   \FunctionTok{as.data.frame}\NormalTok{()}
 
 \CommentTok{\#NaN to NA}
@@ -1521,15 +1541,9 @@ only observations, and finally join both datasets by date.
 \NormalTok{  moiscrust\_daily,}
 \NormalTok{  weather,}
   \AttributeTok{by =} \StringTok{"date"}
-\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(}
-\NormalTok{  interpolated }\SpecialCharTok{==} \ConstantTok{FALSE}
 \NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
 \NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}
     \SpecialCharTok{{-}}\FunctionTok{contains}\NormalTok{(}\StringTok{"model\_"}\NormalTok{),}
-    \SpecialCharTok{{-}}\NormalTok{same\_microsite,}
-    \SpecialCharTok{{-}}\NormalTok{sensors\_shared\_valid\_percent,}
-    \SpecialCharTok{{-}}\NormalTok{selection\_score,}
-    \SpecialCharTok{{-}}\NormalTok{interpolation\_quality,}
     \SpecialCharTok{{-}}\NormalTok{year.y,}
     \SpecialCharTok{{-}}\NormalTok{month.y}
 \NormalTok{    ) }\SpecialCharTok{\%\textgreater{}\%} 
@@ -1548,8 +1562,8 @@ only observations, and finally join both datasets by date.
 \NormalTok{    month\_day,}
 \NormalTok{    week,}
 \NormalTok{    week\_day,}
-\NormalTok{    microsite,}
 \NormalTok{    sensor,}
+\NormalTok{    microsite,}
 \NormalTok{    soil\_moisture\_min,}
     \AttributeTok{soil\_moisture\_mean =} \FunctionTok{round}\NormalTok{(soil\_moisture\_mean, }\DecValTok{3}\NormalTok{),}
 \NormalTok{    soil\_moisture\_max,}
@@ -1564,7 +1578,7 @@ only observations, and finally join both datasets by date.
 \end{Shaded}
 
 The resulting table, \texttt{moiscrust\_weather}, has daily observations
-of soil humidity coupled with daily weather data, and no imputed data.
+of soil humidity (not imputed data) coupled with daily weather data.
 
 \hypertarget{preparing-database-formats}{%
 \section{Preparing database formats}\label{preparing-database-formats}}
@@ -1572,17 +1586,41 @@ of soil humidity coupled with daily weather data, and no imputed data.
 \hypertarget{format-description}{%
 \subsection{Format description}\label{format-description}}
 
-The dataset \textbf{moiscrust\_long} is the database in long format
-already. Below we rename it to \textbf{moiscrust}, and describe its
-columns.
+\hypertarget{moiscrust}{%
+\subsubsection{\texorpdfstring{\texttt{moiscrust}}{moiscrust}}\label{moiscrust}}
+
+The dataset \textbf{moiscrust\_long} is the MOISCRUST database in long
+format Below we rename it to \textbf{moiscrust}, reorder its columns,
+and describe its structure.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{moiscrust }\OtherTok{\textless{}{-}}\NormalTok{ moiscrust\_long}
+\NormalTok{moiscrust }\OtherTok{\textless{}{-}}\NormalTok{ moiscrust\_long[ , }\FunctionTok{c}\NormalTok{(}
+  \StringTok{"date\_time"}\NormalTok{,}
+  \StringTok{"date\_time\_id"}\NormalTok{,}
+  \StringTok{"date"}\NormalTok{,}
+  \StringTok{"time"}\NormalTok{,}
+  \StringTok{"year"}\NormalTok{,}
+  \StringTok{"year\_day"}\NormalTok{,}
+  \StringTok{"month"}\NormalTok{,}
+  \StringTok{"week"}\NormalTok{,}
+  \StringTok{"week\_day"}\NormalTok{,}
+  \StringTok{"sensor"}\NormalTok{,}
+  \StringTok{"microsite"}\NormalTok{,}
+  \StringTok{"soil\_moisture"}\NormalTok{,}
+  \StringTok{"interpolated"}\NormalTok{,}
+  \StringTok{"interpolation\_quality"}\NormalTok{,}
+  \StringTok{"model\_ci\_lower"}\NormalTok{,}
+  \StringTok{"model\_ci\_upper"}\NormalTok{,}
+  \StringTok{"model\_predictor"}\NormalTok{,}
+  \StringTok{"same\_microsite"}\NormalTok{,}
+  \StringTok{"sensors\_shared\_valid\_percent"}\NormalTok{,}
+  \StringTok{"selection\_score"}
+\NormalTok{)]}
 \end{Highlighting}
 \end{Shaded}
 
-The columns of the \texttt{moiscrust} table are:
+The columns of the \texttt{moiscrust} data frame are:
 
 \begin{itemize}
 \tightlist
@@ -1608,13 +1646,16 @@ The columns of the \texttt{moiscrust} table are:
 \item
   \emph{sensor}: character, sensor name.
 \item
+  \emph{microsite}: character, name of the microsite.
+\item
   \emph{soil\_moisture}: numeric, soil moisture value in
   \(m^{3} water /m^{3} soil\).
 \item
   \emph{interpolated}: boolean, \emph{TRUE} for interpolated records and
   \emph{FALSE} for observations.
 \item
-  \emph{model\_estimate}: numeric, prediction of the linear model.
+  \emph{interpolation\_quality}: numeric, r-squared of the model used to
+  interpolate the soil moisture value.
 \item
   \emph{model\_ci\_lower}: numeric, lower bound of the confidence
   interval of the estimate.
@@ -1626,11 +1667,8 @@ The columns of the \texttt{moiscrust} table are:
   predictor in the linear model.
 \item
   \emph{same\_microsite}: boolean, \emph{TRUE} if the sensor and its
-  predictor are in the same group (``stipa'', ``retama'',
+  predictor are in the same microsite group (``stipa'', ``retama'',
   ``biocrust\_low'', ``biocrust\_medium'', ``biocrust\_high'').
-\item
-  \emph{sensors\_r\_squared}: numeric, R squared between \emph{sensor}
-  and \emph{model\_predictor}.
 \item
   \emph{sensors\_shared\_valid\_percent}: numeric, percentage of shared
   valid cases between \emph{sensor} and \emph{model\_predictor}, taking
@@ -1640,12 +1678,59 @@ The columns of the \texttt{moiscrust} table are:
   \emph{model\_predictor}, based on the sum of \emph{same\_microsite}
   (100 if \emph{TRUE} and 0 if \emph{FALSE}), \emph{sensors\_r\_squared}
   multiplied by 100, and \emph{sensors\_shared\_valid\_percent}.
+\end{itemize}
+
+\hypertarget{moiscrust_weather}{%
+\subsubsection{\texorpdfstring{\texttt{moiscrust\_weather}}{moiscrust\_weather}}\label{moiscrust_weather}}
+
+The \texttt{moiscrust\_weather} data frame, at daily resolution, has the
+following columns:
+
+\begin{itemize}
+\tightlist
 \item
-  \emph{interpolation\_quality}: character, with the values
-  ``observation'' for observations, ``acceptable'' for interpolated
-  values where \emph{sensors\_r\_squared} is higher than 0.85 and
-  \emph{sensors\_shared\_valid\_percent} is higher than 20, and ``poor''
-  for interpolated values below at least one of these thresholds.
+  \emph{date}: date in format year-month-day.
+\item
+  \emph{year}: integer, year.
+\item
+  \emph{year\_day}: integer, day of the year.
+\item
+  \emph{season}: character, name of the season.
+\item
+  \emph{month}: integer, month number.
+\item
+  \emph{month\_day}: integer, day of the month.
+\item
+  \emph{week}: integer, week of the year.
+\item
+  \emph{week\_day}: integer, day of the week.
+\item
+  \emph{sensor}: character, sensor name.
+\item
+  \emph{microsite}: character, name of the microsite.
+\item
+  \emph{soil\_moisture\_min}: numeric, minimum soil moisture value for
+  the given day.
+\item
+  \emph{soil\_moisture\_mean}: numeric, mean soil moisture for the given
+  day.
+\item
+  \emph{soil\_moisture\_max}: numeric, maximum soil moisture registered
+  for the given day.
+\item
+  \emph{solar\_radiation\_sum}: numeric, sum of daily solar radiation,
+  in \(W/m^2\).
+\item
+  \emph{temperature\_max}: numeric, maximum daily temperature, in
+  \(ºC\).
+\item
+  \emph{temperature\_min}: numeric, minimum daily temperature, in
+  \(ºC\).
+\item
+  \emph{rainfall\_sum}: numeric, total daily rainfall, in \(mm\).
+\item
+  \emph{humidity\_average}: numeric, daily average humidity, in \(%
+  \).
 \end{itemize}
 
 \hypertarget{saving-the-data-base-in-different-formats}{%
